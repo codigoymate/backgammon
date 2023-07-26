@@ -28,10 +28,19 @@ static void new_game_menu_item_activate(GtkMenuItem *menu_item, gpointer data) {
 Backgammon *backgammon_new(int argc, char *argv[]) {
 	Backgammon *bg;
 	GtkBuilder *builder;
+	GtkCssProvider *css_provider;
+	GdkScreen *screen;
 
 	bg = (Backgammon *) g_malloc(sizeof(Backgammon));
 
 	gtk_init(&argc, &argv);
+
+	css_provider = gtk_css_provider_new();
+	gtk_css_provider_load_from_path(css_provider, "ui/styles.css", NULL);
+
+	screen = gdk_screen_get_default();
+	gtk_style_context_add_provider_for_screen(screen,
+		GTK_STYLE_PROVIDER(css_provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
 	builder = gtk_builder_new();
 	gtk_builder_add_from_file(builder, "ui/main-window.glade", NULL);
