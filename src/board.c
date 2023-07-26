@@ -135,12 +135,24 @@ static gboolean board_on_draw(GtkWidget *area, cairo_t *cr, gpointer data) {
 	return TRUE;
 }
 
-Board *board_new(GtkBuilder *builder) {
+static gboolean board_on_click(GtkDrawingArea *drw, GdkEventButton *event, gpointer data) {
+	gdouble x, y;
+
+	x = event->x / (gdouble) gtk_widget_get_allocated_width(GTK_WIDGET(drw));
+	y = event->y / (gdouble) gtk_widget_get_allocated_height(GTK_WIDGET(drw));
+
+	g_print("(%.2f, %.2f)\n", x, y);
+	return TRUE;
+}
+
+Board *board_new(GtkBuilder *builder, void *bg) {
 	
 	Board *board = (Board *) g_malloc(sizeof(Board));
 
 	board->drawing_area = GTK_DRAWING_AREA(gtk_builder_get_object(builder, "board-area"));
 	g_signal_connect(board->drawing_area, "draw", G_CALLBACK(board_on_draw), board);
+	gtk_widget_set_events(board->drawing_area, GDK_BUTTON_PRESS_MASK);
+	g_signal_connect(board->drawing_area, "button-press-event", G_CALLBACK(board_on_click), bg);
 
 	board_reset(board);
 
@@ -168,4 +180,6 @@ void board_reset(Board *board) {
 	board->data[23] = -2;
 
 	dice_roll(board->dice);
+
+	board->enable_dice = TRUE;
 }

@@ -63,7 +63,7 @@ Backgammon *backgammon_new(int argc, char *argv[]) {
 		G_CALLBACK(gtk_main_quit), NULL
 	);
 
-	bg->board = board_new(builder);
+	bg->board = board_new(builder, bg);
 
 	g_object_unref(builder);
 

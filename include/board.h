@@ -21,13 +21,13 @@
 
 #include <gtk/gtk.h>
 
-
 typedef struct board_t {
 	GtkDrawingArea *drawing_area;
 	gint data[24]; guint dice[2];
+	gboolean enable_dice;
 } Board;
 
-Board *board_new(GtkBuilder *builder);
+Board *board_new(GtkBuilder *builder, void *bg);
 void board_free(Board *board);
 void board_reset(Board *board);
 
