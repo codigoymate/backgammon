@@ -6,10 +6,15 @@ void human_play_func(void *bgp) {
 	Backgammon *bg = (Backgammon *) bgp;
 	switch(bg->status) {
 	case S_ROLL_DICE:
+		bg->board->enable_dice = TRUE;
 		gtk_label_set_text(bg->action_label, "Lanzar los dados");
+		break;
 	case S_MOVE_PIECES:
+		bg->board->enable_dice = FALSE;
+		gtk_label_set_text(bg->action_label, "Mover fichas");
+		break;
 	case S_END_TURN:
-		
+		break;
 	}
 }
 

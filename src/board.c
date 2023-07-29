@@ -2,6 +2,8 @@
 #include <cairo.h>
 #include <dice.h>
 
+#include <backgammon.h>
+
 void draw_triangle(cairo_t *cr, gdouble x, guchar type, gint w, gint h) {
 
 	gint ybase, ytop;
@@ -132,16 +134,33 @@ static gboolean board_on_draw(GtkWidget *area, cairo_t *cr, gpointer data) {
 	// Dados
 	dice_draw(cr, board->dice, w, h);
 
+	// Test
+	/*cairo_rectangle(cr, w * 0.6, h * 0.436, w * 0.289, h * 0.12);
+	cairo_stroke(cr);*/
+
 	return TRUE;
 }
 
 static gboolean board_on_click(GtkDrawingArea *drw, GdkEventButton *event, gpointer data) {
 	gdouble x, y;
+	Backgammon *bg = (Backgammon *) data;
 
-	x = event->x / (gdouble) gtk_widget_get_allocated_width(GTK_WIDGET(drw));
-	y = event->y / (gdouble) gtk_widget_get_allocated_height(GTK_WIDGET(drw));
+	if (event->type == GDK_BUTTON_PRESS && event->button == 1) {
 
-	g_print("(%.2f, %.2f)\n", x, y);
+		x = event->x / (gdouble) gtk_widget_get_allocated_width(GTK_WIDGET(drw));
+		y = event->y / (gdouble) gtk_widget_get_allocated_height(GTK_WIDGET(drw));
+
+		// Dice
+		if (bg->board->enable_dice)
+			if (x > 0.6 && x < 0.6 + 0.289 && y > 0.436 && y < 0.436 + 0.12) {
+				dice_roll(bg->board->dice);
+				gtk_widget_queue_draw(GTK_WIDGET(drw));
+	
+				bg->status = S_MOVE_PIECES;
+				backgammon_next_step(bg);
+			}
+	}
+
 	return TRUE;
 }
 
@@ -151,7 +170,9 @@ Board *board_new(GtkBuilder *builder, void *bg) {
 
 	board->drawing_area = GTK_DRAWING_AREA(gtk_builder_get_object(builder, "board-area"));
 	g_signal_connect(board->drawing_area, "draw", G_CALLBACK(board_on_draw), board);
-	gtk_widget_set_events(board->drawing_area, GDK_BUTTON_PRESS_MASK);
+	gtk_widget_set_events(
+		GTK_WIDGET(board->drawing_area),
+		GDK_BUTTON_PRESS_MASK);
 	g_signal_connect(board->drawing_area, "button-press-event", G_CALLBACK(board_on_click), bg);
 
 	board_reset(board);
@@ -179,7 +200,9 @@ void board_reset(Board *board) {
 	board->data[18] = 5;
 	board->data[23] = -2;
 
-	dice_roll(board->dice);
+	//dice_roll(board->dice);
+	board->dice[0] = 1;
+	board->dice[1] = 1;
 
-	board->enable_dice = TRUE;
+	board->enable_dice = FALSE;
 }
