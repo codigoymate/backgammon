@@ -4,6 +4,10 @@
 
 #include <backgammon.h>
 
+void board_redraw(Board *board);
+void dice_click(Backgammon *bg);
+void place_click(Backgammon *bg, Place *place);
+
 void draw_triangle(cairo_t *cr, Place place, gint w, gint h) {
 
 	gint ybase, ytop;
@@ -112,26 +116,10 @@ static gboolean board_on_draw(GtkWidget *area, cairo_t *cr, gpointer data) {
 
 	// Selección
 	if (board->selected != -1) {
-		gint correction = 0;
-		if ((board->selected > 5 && board->selected < 12) ||
-			board->selected > 17)
-			correction = PLACE_SIZE * w;
-
 		COLOR_SELECTION(cr);
-		if (board->selected < 12) {
-			cairo_rectangle(cr,
-			(1.0 - board->selected * PLACE_SIZE - PLACE_SIZE * 2.0) * w - correction,
-			0,
-			PLACE_SIZE * w,
-			TRIANGLE_HEIGHT * h);
-			
-		} else {
-			cairo_rectangle(cr,
-			(board->selected - 12) * PLACE_SIZE * w + correction,
-			(1.0 - TRIANGLE_HEIGHT) * h,
-			PLACE_SIZE * w,
-			TRIANGLE_HEIGHT * h);
-		}
+		cairo_rectangle(cr, board->places[board->selected].x * w,
+			board->places[board->selected].y * h,
+			PLACE_SIZE * w, TRIANGLE_HEIGHT * h);
 		cairo_stroke(cr);
 	}
 
@@ -142,7 +130,8 @@ static gboolean board_on_draw(GtkWidget *area, cairo_t *cr, gpointer data) {
 }
 
 static gboolean board_on_click(GtkDrawingArea *drw, GdkEventButton *event, gpointer data) {
-	gdouble x, y;
+	gdouble x, y, px, py;
+	gint i;
 	Backgammon *bg = (Backgammon *) data;
 
 	if (event->type == GDK_BUTTON_PRESS && event->button == 1) {
@@ -153,15 +142,36 @@ static gboolean board_on_click(GtkDrawingArea *drw, GdkEventButton *event, gpoin
 		// Dice
 		if (bg->board->enable_dice)
 			if (x > 0.6 && x < 0.6 + 0.289 && y > 0.436 && y < 0.436 + 0.12) {
-				dice_roll(bg->board->dice);
-				gtk_widget_queue_draw(GTK_WIDGET(drw));
-	
-				bg->status = S_MOVE_PIECES;
-				backgammon_next_step(bg);
+				dice_click(bg);
+			}
+
+		// Places
+		if (bg->board->enable_places)
+			for (i = 0; i < 24; i ++) {
+				px = bg->board->places[i].x;
+				py = bg->board->places[i].y;
+				if (x > px && x < px + PLACE_SIZE &&
+					y > py && y < py + TRIANGLE_HEIGHT) {
+						place_click(bg, &bg->board->places[i]);
+						break;
+					}
 			}
 	}
 
 	return TRUE;
+}
+
+void dice_click(Backgammon *bg) {
+	dice_roll(bg->board->dice);
+	board_redraw(bg->board);
+
+	bg->status = S_MOVE_PIECES;
+	backgammon_next_step(bg);
+}
+
+void place_click(Backgammon *bg, Place *place) {
+	bg->board->selected = place->id;
+	board_redraw(bg->board);
 }
 
 Board *board_new(GtkBuilder *builder, void *bg) {
@@ -202,7 +212,7 @@ void board_reset(Board *board) {
 		if (i == 17) x += PLACE_SIZE;
 	}
 
-	board->selected = 23;
+	board->selected = -1;
 
 	board->places[0].data = 2;
 	board->places[5].data = -5;
@@ -218,4 +228,9 @@ void board_reset(Board *board) {
 	board->dice[1] = 1;
 
 	board->enable_dice = FALSE;
+	board->enable_places = FALSE;
+}
+
+void board_redraw(Board *board) {
+	gtk_widget_queue_draw(GTK_WIDGET(board->drawing_area));
 }
