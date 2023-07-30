@@ -119,6 +119,18 @@ static gboolean board_on_draw(GtkWidget *area, cairo_t *cr, gpointer data) {
 	for (i = 1; i <= 12; i ++) {
 		draw_colored_triangle(cr, x, 0, i % 2, w, h);
 		draw_colored_triangle(cr, x, 1, i % 2 == 0, w, h);
+
+		/*
+		// Seleccion
+		if (board->selected == i - 1 || board->selected == i + 12 - 1) {
+			COLOR_SELECTION(cr);
+			cairo_rectangle(cr, x * w,
+					(i <= 12 ? 0 : 1.0 - TRIANGLE_HEIGHT) * h,
+					PLACE_SIZE * w, TRIANGLE_HEIGHT * h);
+			cairo_stroke(cr);
+		}
+		*/
+
 		x += 1.0 / 14.0;
 		if (i == 6) x += 1.0 / 14.0;
 	}
@@ -131,12 +143,33 @@ static gboolean board_on_draw(GtkWidget *area, cairo_t *cr, gpointer data) {
 
 	draw_pieces(cr, board, w, h);
 
+	// Selección
+	if (board->selected != -1) {
+		gint correction = 0;
+		if ((board->selected > 5 && board->selected < 12) ||
+			board->selected > 17)
+			correction = PLACE_SIZE * w;
+
+		COLOR_SELECTION(cr);
+		if (board->selected < 12) {
+			cairo_rectangle(cr,
+			(1.0 - board->selected * PLACE_SIZE - PLACE_SIZE * 2.0) * w - correction,
+			0,
+			PLACE_SIZE * w,
+			TRIANGLE_HEIGHT * h);
+			
+		} else {
+			cairo_rectangle(cr,
+			(board->selected - 12) * PLACE_SIZE * w + correction,
+			(1.0 - TRIANGLE_HEIGHT) * h,
+			PLACE_SIZE * w,
+			TRIANGLE_HEIGHT * h);
+		}
+		cairo_stroke(cr);
+	}
+
 	// Dados
 	dice_draw(cr, board->dice, w, h);
-
-	// Test
-	/*cairo_rectangle(cr, w * 0.6, h * 0.436, w * 0.289, h * 0.12);
-	cairo_stroke(cr);*/
 
 	return TRUE;
 }
@@ -188,8 +221,12 @@ void board_reset(Board *board) {
 	guint i;
 
 	// Acomoda las piezas
-	for (i = 0; i < 24; i ++)
+	for (i = 0; i < 24; i ++) {
 		board->data[i] = 0;
+		board->mark[i] = 0;
+	}
+
+	board->selected = 23;
 
 	board->data[0] = 2;
 	board->data[5] = -5;

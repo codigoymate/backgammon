@@ -19,11 +19,16 @@
 #define COLOR_PIECE_BLACK_BORDER(cr)		cairo_set_source_rgb(cr, 0.0, 0.0, 0.0)
 #define COLOR_PIECE_BLACK_FACE(cr)			cairo_set_source_rgb(cr, 0.2, 0.2, 0.2)
 
+#define COLOR_SELECTION(cr)					cairo_set_source_rgb(cr, 1.0, 1.0, 0.2)
+
 #include <gtk/gtk.h>
 
 typedef struct board_t {
 	GtkDrawingArea *drawing_area;
-	gint data[24]; guint dice[2];
+	gint data[24];
+	gboolean mark[24];
+	gint selected;
+	guint dice[2];
 	gboolean enable_dice;
 } Board;
 
