@@ -23,10 +23,16 @@
 
 #include <gtk/gtk.h>
 
+typedef struct place_t {
+	guint id;
+	gdouble x, y;
+	gint data;
+	gboolean mark;
+} Place;
+
 typedef struct board_t {
 	GtkDrawingArea *drawing_area;
-	gint data[24];
-	gboolean mark[24];
+	Place places[24];
 	gint selected;
 	guint dice[2];
 	gboolean enable_dice;
