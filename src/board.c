@@ -82,6 +82,22 @@ void draw_piece_group(cairo_t *cr, Place place, gint w, gint h) {
     cairo_show_text(cr, text);
 }
 
+void draw_mark(cairo_t *cr, Place place, gint w, gint h) {
+	gdouble ybase, ytop;
+	if (place.mark) {
+		ybase = place.id < 12 ? MARK_HEIGHT : 1.0 - MARK_HEIGHT;
+		ytop = place.id < 12 ? 0.0 : 1.0;
+
+		COLOR_MARK(cr);
+		cairo_move_to(cr, w * place.x, ybase * h);
+		cairo_line_to(cr, w * place.x + w * PLACE_SIZE, ybase * h);
+		cairo_line_to(cr, w * place.x + w * PLACE_SIZE / 2, ytop * h);
+		cairo_close_path(cr);
+
+		cairo_stroke(cr);
+	}
+}
+
 static gboolean board_on_draw(GtkWidget *area, cairo_t *cr, gpointer data) {
 	gdouble w, h;
 	gint i;
@@ -100,10 +116,11 @@ static gboolean board_on_draw(GtkWidget *area, cairo_t *cr, gpointer data) {
 	COLOR_BACKGROUND(cr);
 	cairo_paint(cr);
 
-	// Triangulos y fichas
+	// Triangulos, fichas y marcas
 	for (i = 0; i < 24; i ++) {
 		draw_colored_triangle(cr, board->places[i], i % 2, w, h);
 		draw_piece_group(cr, board->places[i], w, h);
+		draw_mark(cr, board->places[i], w, h);
 	}
 
 	// Bars
@@ -111,8 +128,6 @@ static gboolean board_on_draw(GtkWidget *area, cairo_t *cr, gpointer data) {
 	cairo_rectangle(cr, w * 0.0714 * 6, 0, w * 0.0714, h);
 	cairo_rectangle(cr, w * 0.0714 * 13, 0, w * 0.0714, h);
 	cairo_fill(cr);
-
-	//draw_pieces(cr, board, w, h);
 
 	// Selección
 	if (board->selected != -1) {
@@ -200,9 +215,10 @@ void board_reset(Board *board) {
 
 	// Acomoda las piezas
 	for (i = 0; i < 24; i ++) {
+		board->places[i].mark = TRUE;
+
 		board->places[i].id = i;
 		board->places[i].data = 0;
-		board->places[i].mark = FALSE;
 		board->places[i].x = x;
 		board->places[i].y = i < 12 ? 0 : 1.0 - TRIANGLE_HEIGHT;
 		if (i < 12) x -= PLACE_SIZE;

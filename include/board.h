@@ -8,6 +8,7 @@
 #define TRIANGLE_HEIGHT						0.43
 #define PLACE_SIZE							0.071428571
 #define PIECE_SIZE							0.06
+#define MARK_HEIGHT							0.03
 #define COLOR_BACKGROUND(cr)				cairo_set_source_rgb(cr, 0.4, 0.2, 0.0)
 #define COLOR_BAR(cr)						cairo_set_source_rgb(cr, 0.2, 0.1, 0.0)
 #define COLOR_TRIANGLE_1_BORDER(cr)			cairo_set_source_rgba(cr, 0.6, 0.0, 0.0, 0.5)
@@ -20,6 +21,7 @@
 #define COLOR_PIECE_BLACK_FACE(cr)			cairo_set_source_rgb(cr, 0.2, 0.2, 0.2)
 
 #define COLOR_SELECTION(cr)					cairo_set_source_rgb(cr, 1.0, 1.0, 0.2)
+#define COLOR_MARK(cr)						cairo_set_source_rgb(cr, 0.0, 1.0, 0.0)
 
 #include <gtk/gtk.h>
 
