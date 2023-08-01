@@ -18,8 +18,10 @@ static void new_game_menu_item_activate(GtkMenuItem *menu_item, gpointer data) {
 
 	bg->player[0].play_func = human_play_func;
 	bg->player[0].name = g_string_new("Humano");
+	bg->player[0].piece = BLACK;
 	bg->player[1].play_func = human_play_func;
 	bg->player[1].name = g_string_new("IA");
+	bg->player[1].piece = WHITE;
 
 	backgammon_next_step(bg);
 

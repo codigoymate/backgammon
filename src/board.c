@@ -185,8 +185,32 @@ void dice_click(Backgammon *bg) {
 }
 
 void place_click(Backgammon *bg, Place *place) {
-	bg->board->selected = place->id;
-	board_redraw(bg->board);
+	
+	Board *b = bg->board;
+
+	// No hay fichas
+	if (!place->data) return ;
+
+	// Si son las fichas de otro jugador ...
+	if (place->data * backgammon_current_player(bg)->piece < 0) return;
+
+	// Sin seleccionar
+	if (b->selected == -1) {
+		
+		// Selecciona el lugar (provisorio)
+		b->selected = place->id;
+		board_redraw(b);
+	} else {
+		// Si no hay marca de destino ...
+		if (!place->mark) {
+			// Selecciona el lugar (provisorio)
+			b->selected = place->id;
+			board_redraw(b);
+			// Borra las marcas
+			board_clear_marks(b);
+		}
+	}
+
 }
 
 Board *board_new(GtkBuilder *builder, void *bg) {
@@ -215,7 +239,7 @@ void board_reset(Board *board) {
 
 	// Acomoda las piezas
 	for (i = 0; i < 24; i ++) {
-		board->places[i].mark = TRUE;
+		board->places[i].mark = FALSE;
 
 		board->places[i].id = i;
 		board->places[i].data = 0;
@@ -245,6 +269,12 @@ void board_reset(Board *board) {
 
 	board->enable_dice = FALSE;
 	board->enable_places = FALSE;
+}
+
+void board_clear_marks(Board *board) {
+	guint i;
+	for (i = 0; i < 24; i ++)
+		board->places[i].mark = FALSE;
 }
 
 void board_redraw(Board *board) {
