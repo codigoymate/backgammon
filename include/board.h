@@ -43,5 +43,6 @@ typedef struct board_t {
 Board *board_new(GtkBuilder *builder, void *bg);
 void board_free(Board *board);
 void board_reset(Board *board);
+void board_clear_marks(Board *board);
 
 #endif

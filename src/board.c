@@ -3,6 +3,7 @@
 #include <dice.h>
 
 #include <backgammon.h>
+#include <checker.h>
 
 void board_redraw(Board *board);
 void dice_click(Backgammon *bg);
@@ -199,15 +200,21 @@ void place_click(Backgammon *bg, Place *place) {
 		
 		// Selecciona el lugar (provisorio)
 		b->selected = place->id;
+
+		// Chequea los destinos según el resultado de los dados
+		check_selection(bg);
+
 		board_redraw(b);
 	} else {
 		// Si no hay marca de destino ...
 		if (!place->mark) {
 			// Selecciona el lugar (provisorio)
 			b->selected = place->id;
+
+			// Chequea los destinos según el resultado de los dados
+			check_selection(bg);
+
 			board_redraw(b);
-			// Borra las marcas
-			board_clear_marks(b);
 		}
 	}
 
