@@ -189,6 +189,39 @@ void place_click(Backgammon *bg, Place *place) {
 	
 	Board *b = bg->board;
 
+	// Si el lugar a seleccionar tiene una marca
+	if (place->mark) {
+
+	} else { // Si el lugar a seleccionar no está marcado
+		// Borra el resto de las marcas
+		board_clear_marks(b);
+
+		// No hay fichas
+		if (!place->data) {
+			// Deselecciona
+			b->selected = -1;
+			board_redraw(b);
+			return ;
+		}
+
+		// Si son las fichas de otro jugador ...
+		if (place->data * backgammon_current_player(bg)->piece < 0) {
+			// Deselecciona
+			b->selected = -1;
+			board_redraw(b);
+			return;
+		}
+
+		// Selecciona el lugar
+		b->selected = place->id;
+
+		// Chequea los destinos según el resultado de los dados
+		check_selection(bg);
+
+		board_redraw(b);
+	}
+
+	/*
 	// No hay fichas
 	if (!place->data) return ;
 
@@ -217,6 +250,7 @@ void place_click(Backgammon *bg, Place *place) {
 			board_redraw(b);
 		}
 	}
+	*/
 
 }
 
