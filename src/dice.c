@@ -18,10 +18,10 @@ void draw_rounded_rectangle(cairo_t *cr, gdouble x, gdouble y,
 
 void dice_draw_single(cairo_t *cr, guint value, gdouble x, gdouble y, gint w, gint h) {
 	COLOR_DICE_FACE(cr);
-	draw_rounded_rectangle(cr, x * w, y * h, DICE_SIZE * w, DICE_SIZE * w, DICE_SIZE * 0.2);
+	draw_rounded_rectangle(cr, x * w, y * h, DICE_SIZE * w, DICE_SIZE * w, DICE_SIZE * w * 0.18);
 	cairo_fill(cr);
 	COLOR_DICE_BORDER(cr);
-	draw_rounded_rectangle(cr, x * w, y * h, DICE_SIZE * w, DICE_SIZE * w, DICE_SIZE * 0.2);
+	draw_rounded_rectangle(cr, x * w, y * h, DICE_SIZE * w, DICE_SIZE * w, DICE_SIZE * w * 0.18);
 	cairo_stroke(cr);
 
 	COLOR_DICE_DOT(cr);
