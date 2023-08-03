@@ -116,3 +116,30 @@ void backgammon_next_turn(Backgammon *bg) {
 Player *backgammon_current_player(Backgammon *bg) {
 	return &bg->player[bg->player_turn];
 }
+
+void backgammon_move_piece(Backgammon *bg, gint source, gint destiny) {
+	gint len, i;
+	// Distancia recorrida
+	len = destiny - source;
+	if (len < 0) len *= -1;
+	// Desactiva el dado según la distancia
+	for (i = 0; i < (bg->board->dice[0] == bg->board->dice[1] ? 4 : 2); i ++) {
+		if (bg->board->consumed_dice[i]) continue;
+		if (bg->board->dice[i % 2] == len) {
+			bg->board->consumed_dice[i] = TRUE;
+			break;
+		}
+	}
+
+	// Descuenta source
+	bg->board->places[source].data -= backgammon_current_player(bg)->piece;
+
+	// Si el destino no es enemigo
+	if (bg->board->places[destiny].data * backgammon_current_player(bg)->piece >= 0) {
+		bg->board->places[destiny].data += backgammon_current_player(bg)->piece;
+	} else {
+		// Si es enemigo ...
+		// TODO: toma prisionero
+		bg->board->places[destiny].data = backgammon_current_player(bg)->piece;
+	}
+}

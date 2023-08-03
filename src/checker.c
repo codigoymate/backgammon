@@ -10,8 +10,11 @@ void check_selection(Backgammon *bg) {
 
 	board_clear_marks(bg->board);
 
-	for (i = 0; i < 2; i ++) {
-		dice_value = bg->board->dice[i];
+	for (i = 0; i < (bg->board->dice[0] == bg->board->dice[1] ? 4 : 2); i ++) {
+
+		if (bg->board->consumed_dice[i]) continue;
+
+		dice_value = bg->board->dice[i % 2];
 		destiny = bg->board->selected + dice_value * (bg->player_turn ? -1 : 1);
 		if (destiny < 0 || destiny > 23) continue;
 

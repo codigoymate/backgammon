@@ -11,7 +11,7 @@
 #define COLOR_DICE_DOT(cr)			cairo_set_source_rgb(cr, 0.0, 0.0, 0.0)
 
 
-void dice_roll(guint dice[]);
+void dice_roll(guint dice[], gboolean consumend[]);
 void dice_draw(cairo_t *cr, guint dice[], gint w, gint h);
 
 #endif

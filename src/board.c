@@ -178,7 +178,7 @@ static gboolean board_on_click(GtkDrawingArea *drw, GdkEventButton *event, gpoin
 }
 
 void dice_click(Backgammon *bg) {
-	dice_roll(bg->board->dice);
+	dice_roll(bg->board->dice, bg->board->consumed_dice);
 	board_redraw(bg->board);
 
 	bg->status = S_MOVE_PIECES;
@@ -191,7 +191,9 @@ void place_click(Backgammon *bg, Place *place) {
 
 	// Si el lugar a seleccionar tiene una marca
 	if (place->mark) {
-
+		backgammon_move_piece(bg, b->selected, place->id);
+		b->selected = -1;
+		board_clear_marks(b);
 	} else { // Si el lugar a seleccionar no está marcado
 		// Borra el resto de las marcas
 		board_clear_marks(b);
@@ -218,39 +220,9 @@ void place_click(Backgammon *bg, Place *place) {
 		// Chequea los destinos según el resultado de los dados
 		check_selection(bg);
 
-		board_redraw(b);
 	}
 
-	/*
-	// No hay fichas
-	if (!place->data) return ;
-
-	// Si son las fichas de otro jugador ...
-	if (place->data * backgammon_current_player(bg)->piece < 0) return;
-
-	// Sin seleccionar
-	if (b->selected == -1) {
-		
-		// Selecciona el lugar (provisorio)
-		b->selected = place->id;
-
-		// Chequea los destinos según el resultado de los dados
-		check_selection(bg);
-
-		board_redraw(b);
-	} else {
-		// Si no hay marca de destino ...
-		if (!place->mark) {
-			// Selecciona el lugar (provisorio)
-			b->selected = place->id;
-
-			// Chequea los destinos según el resultado de los dados
-			check_selection(bg);
-
-			board_redraw(b);
-		}
-	}
-	*/
+	board_redraw(b);
 
 }
 
