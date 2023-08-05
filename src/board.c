@@ -197,8 +197,10 @@ void place_click(Backgammon *bg, Place *place) {
 
 		// Comprueba si sigue habiendo movimientos
 		if (!backgammon_player_can_move(bg)) {
-			backgammon_next_turn(bg);
+			/*backgammon_next_turn(bg);*/
+			bg->status = S_END_TURN;
 			backgammon_next_step(bg);
+
 		}
 	} else { // Si el lugar a seleccionar no está marcado
 		// Borra el resto de las marcas

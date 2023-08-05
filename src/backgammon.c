@@ -27,6 +27,14 @@ static void new_game_menu_item_activate(GtkMenuItem *menu_item, gpointer data) {
 
 }
 
+static void end_turn_button_clicked(GtkWidget *button, gpointer data) {
+	Backgammon *bg;
+	bg = (Backgammon *) data;
+
+	backgammon_next_turn(bg);
+	backgammon_next_step(bg);
+}
+
 Backgammon *backgammon_new(int argc, char *argv[]) {
 	Backgammon *bg;
 	GtkBuilder *builder;
@@ -53,6 +61,9 @@ Backgammon *backgammon_new(int argc, char *argv[]) {
 	bg->turn_label = GTK_LABEL(gtk_builder_get_object(builder, "turn-label"));
 	bg->action_label = GTK_LABEL(gtk_builder_get_object(builder, "action-label"));
 
+	bg->end_turn_button = GTK_BUTTON(gtk_builder_get_object(builder, "end-turn-button"));
+	gtk_widget_set_sensitive(GTK_WIDGET(bg->end_turn_button), FALSE);
+
 	g_signal_connect(
 		gtk_builder_get_object(builder, "new-game-menu-item"),
 		"activate",
@@ -63,6 +74,12 @@ Backgammon *backgammon_new(int argc, char *argv[]) {
 		gtk_builder_get_object(builder, "quit-menu-item"),
 		"activate",
 		G_CALLBACK(gtk_main_quit), NULL
+	);
+
+	g_signal_connect(
+		bg->end_turn_button,
+		"clicked",
+		G_CALLBACK(end_turn_button_clicked), bg
 	);
 
 	bg->board = board_new(builder, bg);

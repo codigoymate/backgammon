@@ -13,6 +13,7 @@
 typedef struct backgammon_t {
 	GtkApplicationWindow *window;
 	GtkLabel *turn_label, *action_label;
+	GtkButton *end_turn_button;
 	Board *board;
 	gint player_turn, status;
 	Player player[2];
