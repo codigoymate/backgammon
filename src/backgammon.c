@@ -91,7 +91,6 @@ void backgammon_free(Backgammon *bg) {
 void backgammon_next_step(Backgammon *bg) {
 
 	if (bg->status == S_NOT_PLAYING) {
-		bg->status ++;
 		bg->player_turn = -1;
 		backgammon_next_turn(bg);
 	}
@@ -111,6 +110,8 @@ void backgammon_next_turn(Backgammon *bg) {
 	gtk_label_set_text(bg->turn_label, str->str);
 
 	g_string_free(str, TRUE);
+
+	bg->status = S_ROLL_DICE;
 }
 
 Player *backgammon_current_player(Backgammon *bg) {
@@ -142,4 +143,17 @@ void backgammon_move_piece(Backgammon *bg, gint source, gint destiny) {
 		// TODO: toma prisionero
 		bg->board->places[destiny].data = backgammon_current_player(bg)->piece;
 	}
+}
+
+gboolean backgammon_player_can_move(Backgammon *bg) {
+	gint i;
+	Board *b;
+
+	b = bg->board;
+
+	for (i = 0; i < (b->dice[0] == b->dice[1] ? 4 : 2); i ++) {
+		if (!b->consumed_dice[i]) return TRUE;
+	}
+
+	return FALSE;
 }

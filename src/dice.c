@@ -4,8 +4,8 @@ void dice_roll(guint dice[], gboolean consumed[]) {
 	guint i;
 
 	for (i = 0; i < 4; i ++) consumed[i] = FALSE;
-	//for (i = 0; i < 2; i ++) dice[i] = g_random_int_range(1, 7);
-	dice[0] = dice[1] = g_random_int_range(1, 7);
+	for (i = 0; i < 2; i ++) dice[i] = g_random_int_range(1, 7);
+	//dice[0] = dice[1] = g_random_int_range(1, 7);
 }
 
 void draw_rounded_rectangle(cairo_t *cr, gdouble x, gdouble y,

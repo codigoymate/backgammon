@@ -26,5 +26,6 @@ void backgammon_next_turn(Backgammon *bg);
 Player *backgammon_current_player(Backgammon *bg);
 
 void backgammon_move_piece(Backgammon *bg, gint source, gint destiny);
+gboolean backgammon_player_can_move(Backgammon *bg);
 
 #endif
