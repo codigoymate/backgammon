@@ -146,14 +146,24 @@ static gboolean board_on_draw(GtkWidget *area, cairo_t *cr, gpointer data) {
 }
 
 static gboolean board_on_click(GtkDrawingArea *drw, GdkEventButton *event, gpointer data) {
-	gdouble x, y, px, py;
+	gdouble x, y, px, py, w, h;
 	gint i;
 	Backgammon *bg = (Backgammon *) data;
 
+	w = (gdouble) gtk_widget_get_allocated_width(GTK_WIDGET(drw));
+	h = (gdouble) gtk_widget_get_allocated_height(GTK_WIDGET(drw));
+
+	// Relación de aspecto
+	if (h > w * BOARD_RATIO) {
+		h = w * BOARD_RATIO;
+	} else {
+		w = h * (1.0 / BOARD_RATIO);
+	}
+
 	if (event->type == GDK_BUTTON_PRESS && event->button == 1) {
 
-		x = event->x / (gdouble) gtk_widget_get_allocated_width(GTK_WIDGET(drw));
-		y = event->y / (gdouble) gtk_widget_get_allocated_height(GTK_WIDGET(drw));
+		x = event->x / w;
+		y = event->y / h;
 
 		// Dice
 		if (bg->board->enable_dice)
