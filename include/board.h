@@ -35,7 +35,8 @@ typedef struct place_t {
 typedef struct board_t {
 	GtkDrawingArea *drawing_area;
 	Place places[24];
-	gint selected;
+	gint prison[2];
+	gint selected, prison_sel;
 	guint dice[2];
 	gboolean consumed_dice[4];
 	gboolean enable_dice, enable_places;

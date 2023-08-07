@@ -99,6 +99,30 @@ void draw_mark(cairo_t *cr, Place place, gint w, gint h) {
 	}
 }
 
+void draw_prison(cairo_t *cr, Board *board, gint prison, gint w, gint h) {
+	gdouble y;
+	gint count;
+	gchar text[3];
+	y = board->prison[prison] < 0 ? 0.15 : 0.4;
+	draw_piece(cr, PLACE_SIZE * 7 - PLACE_SIZE / 2, y, board->prison[prison], w, h);
+
+	count = board->prison[prison];
+	count = count < 0 ? count * -1 : count;
+
+	if (count < 2) return ;
+	if (board->prison[prison] < 0) { COLOR_PIECE_BLACK_FACE(cr); }
+	else COLOR_PIECE_WHITE_FACE(cr);
+
+	cairo_select_font_face(cr, "sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD);
+	cairo_set_font_size(cr, 0.027 * w);
+
+	y += 0.011;
+	cairo_move_to(cr, (PLACE_SIZE * 7 - PLACE_SIZE / 2 - 0.009) * w, y * w);
+
+	g_snprintf(text, sizeof(text), "%i", count);
+    cairo_show_text(cr, text);
+}
+
 static gboolean board_on_draw(GtkWidget *area, cairo_t *cr, gpointer data) {
 	gdouble w, h;
 	gint i;
@@ -139,8 +163,23 @@ static gboolean board_on_draw(GtkWidget *area, cairo_t *cr, gpointer data) {
 		cairo_stroke(cr);
 	}
 
+	if (board->prison_sel != -1) {
+		COLOR_SELECTION(cr);
+		if (board->prison_sel == 0)
+			cairo_rectangle(cr, PLACE_SIZE * 6 * w,
+				0.21 * h, PLACE_SIZE * w, PLACE_SIZE * w);
+		else
+			cairo_rectangle(cr, PLACE_SIZE * 6 * w,
+				0.66 * h, PLACE_SIZE * w, PLACE_SIZE * w);
+		cairo_stroke(cr);
+	}
+
 	// Dados
 	dice_draw(cr, board->dice, w, h);
+
+	// Prisiones
+	draw_prison(cr, board, 0, w, h);
+	draw_prison(cr, board, 1, w, h);
 
 	return TRUE;
 }
@@ -182,6 +221,15 @@ static gboolean board_on_click(GtkDrawingArea *drw, GdkEventButton *event, gpoin
 						break;
 					}
 			}
+
+		if (x > PLACE_SIZE * 6 && x < PLACE_SIZE * 6 + PLACE_SIZE) {
+			if (y > 0.21 && y < 0.21 + PLACE_SIZE * 2) {
+				prison_click(bg, 0);
+			}
+			if (y > 0.66 && y < 0.66 + PLACE_SIZE * 2) {
+				prison_click(bg, 1);
+			}
+		}
 	}
 
 	return TRUE;
@@ -244,6 +292,10 @@ void place_click(Backgammon *bg, Place *place) {
 
 }
 
+void prison_click(Backgammon *bg, gint prison) {
+	g_print("prison %i\n", prison);
+}
+
 Board *board_new(GtkBuilder *builder, void *bg) {
 	
 	Board *board = (Board *) g_malloc(sizeof(Board));
@@ -284,6 +336,7 @@ void board_reset(Board *board) {
 	}
 
 	board->selected = -1;
+	board->prison_sel = 1;
 
 	board->places[0].data = 2;
 	board->places[5].data = -5;
@@ -293,6 +346,9 @@ void board_reset(Board *board) {
 	board->places[16].data = 3;
 	board->places[18].data = 5;
 	board->places[23].data = -2;
+
+	board->prison[0] = -2;
+	board->prison[1] = 2;
 
 	//dice_roll(board->dice);
 	board->dice[0] = 1;
