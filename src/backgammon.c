@@ -157,7 +157,8 @@ void backgammon_move_piece(Backgammon *bg, gint source, gint destiny) {
 		bg->board->places[destiny].data += backgammon_current_player(bg)->piece;
 	} else {
 		// Si es enemigo ...
-		// TODO: toma prisionero
+		// Coloca la ficha en prision
+		bg->board->prison[bg->player_turn] += backgammon_current_player(bg)->piece * -1;
 		bg->board->places[destiny].data = backgammon_current_player(bg)->piece;
 	}
 }

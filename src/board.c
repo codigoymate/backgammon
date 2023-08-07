@@ -8,6 +8,7 @@
 void board_redraw(Board *board);
 void dice_click(Backgammon *bg);
 void place_click(Backgammon *bg, Place *place);
+void prison_click(Backgammon *bg, gint prison);
 
 void draw_triangle(cairo_t *cr, Place place, gint w, gint h) {
 
@@ -103,7 +104,10 @@ void draw_prison(cairo_t *cr, Board *board, gint prison, gint w, gint h) {
 	gdouble y;
 	gint count;
 	gchar text[3];
-	y = board->prison[prison] < 0 ? 0.15 : 0.4;
+
+	if (!board->prison[prison]) return ;
+
+	y = prison ? 0.15 : 0.4;
 	draw_piece(cr, PLACE_SIZE * 7 - PLACE_SIZE / 2, y, board->prison[prison], w, h);
 
 	count = board->prison[prison];
@@ -222,6 +226,7 @@ static gboolean board_on_click(GtkDrawingArea *drw, GdkEventButton *event, gpoin
 					}
 			}
 
+		// Prison
 		if (x > PLACE_SIZE * 6 && x < PLACE_SIZE * 6 + PLACE_SIZE) {
 			if (y > 0.21 && y < 0.21 + PLACE_SIZE * 2) {
 				prison_click(bg, 0);
@@ -336,7 +341,7 @@ void board_reset(Board *board) {
 	}
 
 	board->selected = -1;
-	board->prison_sel = 1;
+	board->prison_sel = -1;
 
 	board->places[0].data = 2;
 	board->places[5].data = -5;
@@ -347,8 +352,8 @@ void board_reset(Board *board) {
 	board->places[18].data = 5;
 	board->places[23].data = -2;
 
-	board->prison[0] = -2;
-	board->prison[1] = 2;
+	board->prison[0] = 0;
+	board->prison[1] = 0;
 
 	//dice_roll(board->dice);
 	board->dice[0] = 1;
