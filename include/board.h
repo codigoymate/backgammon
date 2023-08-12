@@ -47,4 +47,6 @@ void board_free(Board *board);
 void board_reset(Board *board);
 void board_clear_marks(Board *board);
 
+void board_redraw(Board *board);
+
 #endif
