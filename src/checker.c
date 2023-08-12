@@ -15,11 +15,11 @@ void check_selection(Backgammon *bg) {
 		if (bg->board->consumed_dice[i]) continue;
 
 		dice_value = bg->board->dice[i % 2];
-		destiny = bg->board->selected + dice_value * (bg->player_turn ? -1 : 1);
+		destiny = bg->board->selected + dice_value * backgammon_current_player(bg)->direction;
 		if (destiny < 0 || destiny > 23) continue;
 
 		// Si el destino tiene fichas de oponente
-		if (bg->board->places[destiny].data * backgammon_current_player(bg)->piece < 0) {
+		if (bg->board->places[destiny].data * backgammon_current_player(bg)->direction < 0) {
 			value = bg->board->places[destiny].data;
 			value *= value < 0 ? -1 : 1;
 

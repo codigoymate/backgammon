@@ -19,9 +19,14 @@ static void new_game_menu_item_activate(GtkMenuItem *menu_item, gpointer data) {
 	bg->player[0].play_func = human_play_func;
 	bg->player[0].name = g_string_new("Humano");
 	bg->player[0].piece = BLACK;
+	bg->player[0].direction = 1;
 	bg->player[1].play_func = human_play_func;
 	bg->player[1].name = g_string_new("IA");
 	bg->player[1].piece = WHITE;
+	bg->player[1].direction = -1;
+
+	board_init(bg->board);
+	board_redraw(bg->board);
 
 	backgammon_next_step(bg);
 
@@ -162,16 +167,16 @@ void backgammon_move_piece(Backgammon *bg, gint source, gint destiny) {
 	}
 
 	// Descuenta source
-	bg->board->places[source].data -= backgammon_current_player(bg)->piece;
+	bg->board->places[source].data -= backgammon_current_player(bg)->direction;
 
 	// Si el destino no es enemigo
-	if (bg->board->places[destiny].data * backgammon_current_player(bg)->piece >= 0) {
-		bg->board->places[destiny].data += backgammon_current_player(bg)->piece;
+	if (bg->board->places[destiny].data * backgammon_current_player(bg)->direction >= 0) {
+		bg->board->places[destiny].data += backgammon_current_player(bg)->direction;
 	} else {
 		// Si es enemigo ...
 		// Coloca la ficha en prision
-		bg->board->prison[bg->player_turn] += backgammon_current_player(bg)->piece * -1;
-		bg->board->places[destiny].data = backgammon_current_player(bg)->piece;
+		bg->board->prison[bg->player_turn] += backgammon_current_player(bg)->direction * -1;
+		bg->board->places[destiny].data = backgammon_current_player(bg)->direction;
 	}
 }
 

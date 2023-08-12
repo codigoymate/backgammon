@@ -36,13 +36,13 @@ void draw_colored_triangle(cairo_t *cr, Place place, guchar color,
 
 void draw_piece(cairo_t *cr, gdouble x, gdouble y, gint color, gint w, gint h) {
 
-	if (color > 0) {COLOR_PIECE_BLACK_FACE(cr);}
+	if (color == BLACK) {COLOR_PIECE_BLACK_FACE(cr);}
 	else COLOR_PIECE_WHITE_FACE(cr);
 
 	cairo_arc(cr, w * x, w * y, PIECE_SIZE * w / 2, 0, G_PI * 2);
 	cairo_fill(cr);
 
-	if (color > 0) {COLOR_PIECE_BLACK_BORDER(cr);}
+	if (color == BLACK) {COLOR_PIECE_BLACK_BORDER(cr);}
 	else COLOR_PIECE_WHITE_BORDER(cr);
 
 	cairo_set_line_width(cr, 2.0);
@@ -50,7 +50,7 @@ void draw_piece(cairo_t *cr, gdouble x, gdouble y, gint color, gint w, gint h) {
 	cairo_stroke(cr);
 }
 
-void draw_piece_group(cairo_t *cr, Place place, gint w, gint h) {
+void draw_piece_group(cairo_t *cr, Backgammon *bg, Place place, gint w, gint h) {
 	gdouble y;
 	guint count, p;
 	char text[3];
@@ -58,7 +58,9 @@ void draw_piece_group(cairo_t *cr, Place place, gint w, gint h) {
 	y = place.id < 12 ? place.y + PIECE_SIZE / 2 : place.y - 0.05;
 	for (p = 0; p < count; p ++) {
 		if (p >= 4) break;
-		draw_piece(cr, place.x + PLACE_SIZE / 2, y, place.data, w, h);
+		draw_piece(cr, place.x + PLACE_SIZE / 2, y,
+			backgammon_player_by_data(bg, place.data)->piece,
+			w, h);
 		if (place.id < 12) y += PIECE_SIZE;
 		else y -= PIECE_SIZE;
 	}
@@ -125,7 +127,13 @@ void draw_prison(cairo_t *cr, Board *board, gint prison, gint w, gint h) {
 static gboolean board_on_draw(GtkWidget *area, cairo_t *cr, gpointer data) {
 	gdouble w, h;
 	gint i;
-	Board *board = (Board *) data;
+
+	Backgammon *bg;
+	Board *board;
+
+	bg = (Backgammon *) data;
+	board = bg->board;
+
 	w = gtk_widget_get_allocated_width(area);
 	h = gtk_widget_get_allocated_height(area);
 
@@ -143,7 +151,7 @@ static gboolean board_on_draw(GtkWidget *area, cairo_t *cr, gpointer data) {
 	// Triangulos, fichas y marcas
 	for (i = 0; i < 24; i ++) {
 		draw_colored_triangle(cr, board->places[i], i % 2, w, h);
-		draw_piece_group(cr, board->places[i], w, h);
+		draw_piece_group(cr, bg, board->places[i], w, h);
 		draw_mark(cr, board->places[i], w, h);
 	}
 
@@ -188,7 +196,7 @@ Board *board_new(GtkBuilder *builder, void *bg) {
 	Board *board = (Board *) g_malloc(sizeof(Board));
 
 	board->drawing_area = GTK_DRAWING_AREA(gtk_builder_get_object(builder, "board-area"));
-	g_signal_connect(board->drawing_area, "draw", G_CALLBACK(board_on_draw), board);
+	g_signal_connect(board->drawing_area, "draw", G_CALLBACK(board_on_draw), bg);
 	gtk_widget_set_events(
 		GTK_WIDGET(board->drawing_area),
 		GDK_BUTTON_PRESS_MASK);
@@ -201,6 +209,17 @@ Board *board_new(GtkBuilder *builder, void *bg) {
 
 void board_free(Board *board) {
 	g_free(board);
+}
+
+void board_init(Board *board) {
+	board->places[0].data = 2;
+	board->places[5].data = -5;
+	board->places[7].data = -3;
+	board->places[11].data = 5;
+	board->places[12].data = -5;
+	board->places[16].data = 3;
+	board->places[18].data = 5;
+	board->places[23].data = -2;
 }
 
 void board_reset(Board *board) {
@@ -224,15 +243,6 @@ void board_reset(Board *board) {
 
 	board->selected = -1;
 	board->prison_sel = -1;
-
-	board->places[0].data = 2;
-	board->places[5].data = -5;
-	board->places[7].data = -3;
-	board->places[11].data = 5;
-	board->places[12].data = -5;
-	board->places[16].data = 3;
-	board->places[18].data = 5;
-	board->places[23].data = -2;
 
 	board->prison[0] = 0;
 	board->prison[1] = 0;

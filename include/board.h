@@ -2,7 +2,7 @@
 #define BOARD_H
 
 #define BLACK								1
-#define WHITE								-1
+#define WHITE								0
 
 #define BOARD_RATIO							0.55
 #define TRIANGLE_HEIGHT						0.43
@@ -45,6 +45,7 @@ typedef struct board_t {
 Board *board_new(GtkBuilder *builder, void *bg);
 void board_free(Board *board);
 void board_reset(Board *board);
+void board_init(Board *board);
 void board_clear_marks(Board *board);
 
 void board_redraw(Board *board);

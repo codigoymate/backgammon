@@ -99,7 +99,7 @@ void place_click(Backgammon *bg, Place *place) {
 		}
 
 		// Si son las fichas de otro jugador ...
-		if (place->data * backgammon_current_player(bg)->piece < 0) {
+		if (place->data * backgammon_current_player(bg)->direction < 0) {
 			// Deselecciona
 			b->selected = -1;
 			board_redraw(b);

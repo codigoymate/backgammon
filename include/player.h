@@ -6,6 +6,7 @@
 typedef struct player_t {
 	GString *name;
 	gint piece;
+	gint direction;
 	void (*play_func)(void *);
 } Player;
 
