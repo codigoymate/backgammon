@@ -135,6 +135,18 @@ Player *backgammon_current_player(Backgammon *bg) {
 	return &bg->player[bg->player_turn];
 }
 
+Player *backgammon_opponent(Backgammon *bg) {
+	return &bg->player[!bg->player_turn];
+}
+
+Player *backgammon_player_by_data(Backgammon *bg, gint data) {
+	Player *player;
+	player = backgammon_current_player(bg);
+	if (player->direction * data > 0) return player;
+	
+	return backgammon_opponent(bg);
+}
+
 void backgammon_move_piece(Backgammon *bg, gint source, gint destiny) {
 	gint len, i;
 	// Distancia recorrida
