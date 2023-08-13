@@ -3,10 +3,10 @@
 
 #include <player.h>
 
-void backgammon_free(Backgammon *bg);
+void bg_free(Backgammon *bg);
 
-static void backgammon_on_window_destroyed(GtkApplicationWindow *window, gpointer data) {
-	backgammon_free(data);
+static void bg_on_window_destroyed(GtkApplicationWindow *window, gpointer data) {
+	bg_free(data);
 }
 
 static void new_game_menu_item_activate(GtkMenuItem *menu_item, gpointer data) {
@@ -28,7 +28,7 @@ static void new_game_menu_item_activate(GtkMenuItem *menu_item, gpointer data) {
 	board_init(bg->board);
 	board_redraw(bg->board);
 
-	backgammon_next_step(bg);
+	bg_next_step(bg);
 
 }
 
@@ -36,11 +36,11 @@ static void end_turn_button_clicked(GtkWidget *button, gpointer data) {
 	Backgammon *bg;
 	bg = (Backgammon *) data;
 
-	backgammon_next_turn(bg);
-	backgammon_next_step(bg);
+	bg_next_turn(bg);
+	bg_next_step(bg);
 }
 
-Backgammon *backgammon_new(int argc, char *argv[]) {
+Backgammon *bg_new(int argc, char *argv[]) {
 	Backgammon *bg;
 	GtkBuilder *builder;
 	GtkCssProvider *css_provider;
@@ -61,7 +61,7 @@ Backgammon *backgammon_new(int argc, char *argv[]) {
 	gtk_builder_add_from_file(builder, "ui/main-window.glade", NULL);
 
 	bg->window = GTK_APPLICATION_WINDOW(gtk_builder_get_object(builder, "main-window"));
-	g_signal_connect(bg->window, "destroy", G_CALLBACK(backgammon_on_window_destroyed), bg);
+	g_signal_connect(bg->window, "destroy", G_CALLBACK(bg_on_window_destroyed), bg);
 
 	bg->turn_label = GTK_LABEL(gtk_builder_get_object(builder, "turn-label"));
 	bg->action_label = GTK_LABEL(gtk_builder_get_object(builder, "action-label"));
@@ -97,12 +97,12 @@ Backgammon *backgammon_new(int argc, char *argv[]) {
 	return bg;
 }
 
-void backgammon_run(Backgammon *bg) {
+void bg_run(Backgammon *bg) {
 	gtk_widget_show_all(GTK_WIDGET(bg->window));
 	gtk_main();
 }
 
-void backgammon_free(Backgammon *bg) {
+void bg_free(Backgammon *bg) {
 	board_free(bg->board);
 	g_string_free(bg->player[0].name, TRUE);
 	g_string_free(bg->player[1].name, TRUE);
@@ -110,17 +110,17 @@ void backgammon_free(Backgammon *bg) {
 	gtk_main_quit();
 }
 
-void backgammon_next_step(Backgammon *bg) {
+void bg_next_step(Backgammon *bg) {
 
 	if (bg->status == S_NOT_PLAYING) {
 		bg->player_turn = -1;
-		backgammon_next_turn(bg);
+		bg_next_turn(bg);
 	}
 
-	backgammon_current_player(bg)->play_func(bg);
+	bg_current_player(bg)->play_func(bg);
 }
 
-void backgammon_next_turn(Backgammon *bg) {
+void bg_next_turn(Backgammon *bg) {
 
 	GString *str;
 
@@ -128,7 +128,7 @@ void backgammon_next_turn(Backgammon *bg) {
 	if (bg->player_turn >= 2) bg->player_turn = 0;
 
 	str = g_string_new("Turno de ");
-	str = g_string_append(str, backgammon_current_player(bg)->name->str);
+	str = g_string_append(str, bg_current_player(bg)->name->str);
 	gtk_label_set_text(bg->turn_label, str->str);
 
 	g_string_free(str, TRUE);
@@ -136,23 +136,23 @@ void backgammon_next_turn(Backgammon *bg) {
 	bg->status = S_ROLL_DICE;
 }
 
-Player *backgammon_current_player(Backgammon *bg) {
+Player *bg_current_player(Backgammon *bg) {
 	return &bg->player[bg->player_turn];
 }
 
-Player *backgammon_opponent(Backgammon *bg) {
+Player *bg_opponent(Backgammon *bg) {
 	return &bg->player[!bg->player_turn];
 }
 
-Player *backgammon_player_by_data(Backgammon *bg, gint data) {
+Player *bg_player_by_data(Backgammon *bg, gint data) {
 	Player *player;
-	player = backgammon_current_player(bg);
+	player = bg_current_player(bg);
 	if (player->direction * data > 0) return player;
 	
-	return backgammon_opponent(bg);
+	return bg_opponent(bg);
 }
 
-void backgammon_move_piece(Backgammon *bg, gint source, gint destiny) {
+void bg_move_piece(Backgammon *bg, gint source, gint destiny) {
 	gint len, i;
 	// Distancia recorrida
 	len = destiny - source;
@@ -167,20 +167,20 @@ void backgammon_move_piece(Backgammon *bg, gint source, gint destiny) {
 	}
 
 	// Descuenta source
-	bg->board->places[source].data -= backgammon_current_player(bg)->direction;
+	bg->board->places[source].data -= bg_current_player(bg)->direction;
 
 	// Si el destino no es enemigo
-	if (bg->board->places[destiny].data * backgammon_current_player(bg)->direction >= 0) {
-		bg->board->places[destiny].data += backgammon_current_player(bg)->direction;
+	if (bg->board->places[destiny].data * bg_current_player(bg)->direction >= 0) {
+		bg->board->places[destiny].data += bg_current_player(bg)->direction;
 	} else {
 		// Si es enemigo ...
 		// Coloca la ficha en prision
-		bg->board->prison[bg->player_turn] += backgammon_current_player(bg)->direction * -1;
-		bg->board->places[destiny].data = backgammon_current_player(bg)->direction;
+		bg->board->prison[bg->player_turn] += bg_current_player(bg)->direction * -1;
+		bg->board->places[destiny].data = bg_current_player(bg)->direction;
 	}
 }
 
-gboolean backgammon_player_can_move(Backgammon *bg) {
+gboolean bg_player_can_move(Backgammon *bg) {
 	gint i;
 	Board *b;
 

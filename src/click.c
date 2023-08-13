@@ -66,7 +66,7 @@ void dice_click(Backgammon *bg) {
 	board_redraw(bg->board);
 
 	bg->status = S_MOVE_PIECES;
-	backgammon_next_step(bg);
+	bg_next_step(bg);
 }
 
 void place_click(Backgammon *bg, Place *place) {
@@ -75,15 +75,15 @@ void place_click(Backgammon *bg, Place *place) {
 
 	// Si el lugar a seleccionar tiene una marca
 	if (place->mark) {
-		backgammon_move_piece(bg, b->selected, place->id);
+		bg_move_piece(bg, b->selected, place->id);
 		b->selected = -1;
 		board_clear_marks(b);
 
 		// Comprueba si sigue habiendo movimientos
-		if (!backgammon_player_can_move(bg)) {
+		if (!bg_player_can_move(bg)) {
 			/*backgammon_next_turn(bg);*/
 			bg->status = S_END_TURN;
-			backgammon_next_step(bg);
+			bg_next_step(bg);
 
 		}
 	} else { // Si el lugar a seleccionar no está marcado
@@ -99,7 +99,7 @@ void place_click(Backgammon *bg, Place *place) {
 		}
 
 		// Si son las fichas de otro jugador ...
-		if (place->data * backgammon_current_player(bg)->direction < 0) {
+		if (place->data * bg_current_player(bg)->direction < 0) {
 			// Deselecciona
 			b->selected = -1;
 			board_redraw(b);

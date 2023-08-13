@@ -59,7 +59,7 @@ void draw_piece_group(cairo_t *cr, Backgammon *bg, Place place, gint w, gint h) 
 	for (p = 0; p < count; p ++) {
 		if (p >= 4) break;
 		draw_piece(cr, place.x + PLACE_SIZE / 2, y,
-			backgammon_player_by_data(bg, place.data)->piece,
+			bg_player_by_data(bg, place.data)->piece,
 			w, h);
 		if (place.id < 12) y += PIECE_SIZE;
 		else y -= PIECE_SIZE;
