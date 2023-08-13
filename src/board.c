@@ -104,7 +104,7 @@ void draw_prison(cairo_t *cr, Board *board, gint prison, gint w, gint h) {
 
 	if (!board->prison[prison]) return ;
 
-	y = prison ? 0.15 : 0.4;
+	y = prison ?  0.4 : 0.15;
 	draw_piece(cr, PLACE_SIZE * 7 - PLACE_SIZE / 2, y, board->prison[prison], w, h);
 
 	count = board->prison[prison];

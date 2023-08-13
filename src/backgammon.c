@@ -166,17 +166,23 @@ void bg_move_piece(Backgammon *bg, gint source, gint destiny) {
 		}
 	}
 
-	// Descuenta source
-	bg->board->places[source].data -= bg_current_player(bg)->direction;
+	
 
 	// Si el destino no es enemigo
 	if (bg->board->places[destiny].data * bg_current_player(bg)->direction >= 0) {
+		// Descuenta source
+		bg->board->places[source].data -= bg_current_player(bg)->direction;
+
 		bg->board->places[destiny].data += bg_current_player(bg)->direction;
 	} else {
 		// Si es enemigo ...
+
 		// Coloca la ficha en prision
-		bg->board->prison[bg->player_turn] += bg_current_player(bg)->direction * -1;
-		bg->board->places[destiny].data = bg_current_player(bg)->direction;
+		bg->board->prison[bg_current_player(bg)->direction == -1 ? 0 : 1] +=
+				bg_opponent(bg)->direction;
+
+		// Reemplaza la actual
+		bg->board->places[destiny].data *= -1;
 	}
 }
 
