@@ -36,7 +36,7 @@ gboolean board_on_click(GtkDrawingArea *drw, GdkEventButton *event, gpointer dat
 			}
 
 		// Places
-		if (bg->board->enable_places)
+		if (bg->board->enable_places) {
 			for (i = 0; i < 24; i ++) {
 				px = bg->board->places[i].x;
 				py = bg->board->places[i].y;
@@ -47,13 +47,14 @@ gboolean board_on_click(GtkDrawingArea *drw, GdkEventButton *event, gpointer dat
 					}
 			}
 
-		// Prison
-		if (x > PLACE_SIZE * 6 && x < PLACE_SIZE * 6 + PLACE_SIZE) {
-			if (y > 0.21 && y < 0.21 + PLACE_SIZE * 2) {
-				prison_click(bg, 0);
-			}
-			if (y > 0.66 && y < 0.66 + PLACE_SIZE * 2) {
-				prison_click(bg, 1);
+			// Prison
+			if (x > PLACE_SIZE * 6 && x < PLACE_SIZE * 6 + PLACE_SIZE) {
+				if (y > 0.21 && y < 0.21 + PLACE_SIZE * 2) {
+					prison_click(bg, 0);
+				}
+				if (y > 0.66 && y < 0.66 + PLACE_SIZE * 2) {
+					prison_click(bg, 1);
+				}
 			}
 		}
 	}
@@ -75,8 +76,11 @@ void place_click(Backgammon *bg, Place *place) {
 
 	// Si el lugar a seleccionar tiene una marca
 	if (place->mark) {
-		bg_move_piece(bg, b->selected, place->id);
+		// Si no hay lugar seleccionado, mueve desde la prisión
+		if (b->selected == -1) bg_move_from_prison(bg, place->id);
+		else bg_move_piece(bg, b->selected, place->id);
 		b->selected = -1;
+		b->prison_sel = -1;
 		board_clear_marks(b);
 
 		// Comprueba si sigue habiendo movimientos
@@ -119,5 +123,14 @@ void place_click(Backgammon *bg, Place *place) {
 }
 
 void prison_click(Backgammon *bg, gint prison) {
-	g_print("prison %i\n", prison);
+	bg->board->selected = -1;
+
+	if (bg->board->prison[prison] * bg_current_player(bg)->direction <= 0) {
+		board_clear_marks(bg->board);
+	} else {
+		bg->board->prison_sel = prison;
+		check_selection(bg);
+	}
+
+	board_redraw(bg->board);
 }

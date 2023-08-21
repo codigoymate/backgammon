@@ -286,6 +286,41 @@ void bg_move_piece(Backgammon *bg, gint source, gint destiny) {
 	}
 }
 
+void bg_move_from_prison(Backgammon *bg, gint destiny) {
+	gint len, i;
+	// Distance traveled
+	if (bg_current_player(bg)->direction == 1) len = destiny + 1;
+	else len = 23 - destiny;
+
+	// Deactivate the die according to the distance
+	for (i = 0; i < (bg->board->dice[0] == bg->board->dice[1] ? 4 : 2); i++) {
+		if (bg->board->consumed_dice[i]) continue;
+		if (bg->board->dice[i % 2] == len) {
+			bg->board->consumed_dice[i] = TRUE;
+			break;
+		}
+	}
+
+	// If the destination is not an enemy
+	if (bg->board->places[destiny].data * bg_current_player(bg)->direction >= 0) {
+		// Remove from source
+
+		bg->board->prison[bg_current_player(bg)->direction == 1 ? 0 : 1] 
+					-= bg_current_player(bg)->direction;
+
+		bg->board->places[destiny].data += bg_current_player(bg)->direction;
+	} else {
+		// If it's an enemy...
+
+		// Put the piece in prison
+		bg->board->prison[bg_current_player(bg)->direction == -1 ? 0 : 1] +=
+				bg_opponent(bg)->direction;
+
+		// Replace the current piece
+		bg->board->places[destiny].data *= -1;
+	}
+}
+
 /**
  * @brief Indicates if the current player can make a move.
  * 
