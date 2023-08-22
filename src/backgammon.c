@@ -110,7 +110,9 @@ Backgammon *bg_new(int argc, char *argv[]) {
 	g_signal_connect(bg->window, "destroy", G_CALLBACK(bg_on_window_destroyed), bg);
 
 	bg->turn_label = GTK_LABEL(gtk_builder_get_object(builder, "turn-label"));
+	gtk_label_set_text(bg->turn_label, "<F2> Comenzar");
 	bg->action_label = GTK_LABEL(gtk_builder_get_object(builder, "action-label"));
+	gtk_label_set_text(bg->action_label, "");
 
 	bg->end_turn_button = GTK_BUTTON(gtk_builder_get_object(builder, "end-turn-button"));
 	gtk_widget_set_sensitive(GTK_WIDGET(bg->end_turn_button), FALSE);
@@ -196,10 +198,9 @@ void bg_next_turn(Backgammon *bg) {
 	bg->player_turn++;
 	if (bg->player_turn >= 2) bg->player_turn = 0;
 
-	str = g_string_new("Turn of ");
+	str = g_string_new("Turno de\n");
 	str = g_string_append(str, bg_current_player(bg)->name->str);
 	gtk_label_set_text(bg->turn_label, str->str);
-
 	g_string_free(str, TRUE);
 
 	bg->status = S_ROLL_DICE;
