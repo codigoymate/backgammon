@@ -287,6 +287,16 @@ void bg_move_piece(Backgammon *bg, gint source, gint destiny) {
 	}
 }
 
+/**
+ * @brief Moves a game piece from selected prison.
+ * 
+ * There must be pieces at the prison (from the current player).
+ * Removes one piece from the prison and adds it to the destination.
+ * If the destination has an opponent's piece, the current player's prison captures an opponent's piece.
+ * 
+ * @param bg Backgammon instance
+ * @param destiny Destination position
+ */
 void bg_move_from_prison(Backgammon *bg, gint destiny) {
 	gint len, i;
 	// Distance traveled
