@@ -67,8 +67,12 @@ static gboolean board_on_draw(GtkWidget *area, cairo_t *cr, gpointer data) {
 	dice_draw(cr, board->dice, w, h);
 
 	// Prisiones
-	draw_prison(cr, board, 0, w, h);
-	draw_prison(cr, board, 1, w, h);
+	draw_prison(cr, bg, 0, w, h);
+	draw_prison(cr, bg, 1, w, h);
+
+	// Goal
+	draw_goal(cr, bg, 0, w, h);
+	draw_goal(cr, bg, 1, w, h);
 
 	return TRUE;
 }
@@ -129,7 +133,9 @@ void board_reset(Board *board) {
 	board->prison[0] = 0;
 	board->prison[1] = 0;
 
-	//dice_roll(board->dice);
+	board->goal[0] = 0;
+	board->goal[1] = 0;
+
 	board->dice[0] = 1;
 	board->dice[1] = 1;
 

@@ -48,11 +48,11 @@ static void new_game_menu_item_activate(GtkMenuItem *menu_item, gpointer data) {
 
 	bg->player[0].play_func = human_play_func;
 	bg->player[0].name = g_string_new("Human");
-	bg->player[0].piece = BLACK;
+	bg->player[0].piece = WHITE;
 	bg->player[0].direction = 1;
 	bg->player[1].play_func = human_play_func;
 	bg->player[1].name = g_string_new("AI");
-	bg->player[1].piece = WHITE;
+	bg->player[1].piece = BLACK;
 	bg->player[1].direction = -1;
 
 	board_init(bg->board);

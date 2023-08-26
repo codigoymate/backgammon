@@ -61,7 +61,7 @@ void draw_piece_group(cairo_t *cr, Backgammon *bg, Place place, gint w, gint h) 
 	}
 
 	if (count <= 4) return ;
-	if (place.data < 0) { COLOR_PIECE_BLACK_FACE(cr); }
+	if (bg_player_by_data(bg, place.data)->piece == WHITE) { COLOR_PIECE_BLACK_FACE(cr); }
 	else COLOR_PIECE_WHITE_FACE(cr);
 
 	cairo_select_font_face(cr, "sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD);
@@ -92,21 +92,28 @@ void draw_mark(cairo_t *cr, Place place, gint w, gint h) {
 	}
 }
 
-void draw_prison(cairo_t *cr, Board *board, gint prison, gint w, gint h) {
+void draw_prison(cairo_t *cr, Backgammon *bg, gint prison, gint w, gint h) {
 	gdouble y;
 	gint count;
 	gchar text[3];
 
+	Board *board;
+
+	board = bg->board;
+
 	if (!board->prison[prison]) return ;
 
 	y = prison ?  0.4 : 0.15;
-	draw_piece(cr, PLACE_SIZE * 7 - PLACE_SIZE / 2, y, board->prison[prison], w, h);
+	draw_piece(cr, PLACE_SIZE * 7 - PLACE_SIZE / 2, y,
+			//board->prison[prison],
+			bg_player_by_data(bg, board->prison[prison])->piece,
+			w, h);
 
 	count = board->prison[prison];
 	count = count < 0 ? count * -1 : count;
 
 	if (count < 2) return ;
-	if (board->prison[prison] < 0) { COLOR_PIECE_BLACK_FACE(cr); }
+	if (bg_player_by_data(bg, board->prison[prison])->piece == WHITE) { COLOR_PIECE_BLACK_FACE(cr); }
 	else COLOR_PIECE_WHITE_FACE(cr);
 
 	cairo_select_font_face(cr, "sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD);
@@ -117,4 +124,42 @@ void draw_prison(cairo_t *cr, Board *board, gint prison, gint w, gint h) {
 
 	g_snprintf(text, sizeof(text), "%i", count);
     cairo_show_text(cr, text);
+}
+
+void draw_goal(cairo_t *cr, Backgammon *bg, gint goal, gint w, gint h) {
+	gdouble y, x;
+	gint count;
+	guint piece, i;
+
+	Board *board = bg->board;
+
+	if (!board->goal[goal]) return ;
+
+	y = goal ?  0.535 : 0.0;
+	x = w * PLACE_SIZE * 13;
+
+	piece = bg_player_by_data(bg, board->goal[goal])->piece;
+	count = board->goal[goal];
+	if (count < 0) count *= -1;
+
+	for (i = 0; i < count; i ++) {
+
+		// Piece color
+		if (piece == BLACK) { COLOR_PIECE_BLACK_FACE(cr); }
+		else COLOR_PIECE_WHITE_FACE(cr);
+
+		cairo_rectangle(cr, x, y * w, PIECE_SIZE * w, PIECE_HEIGHT * w);
+		cairo_fill(cr);
+
+		if (piece == BLACK) { COLOR_PIECE_BLACK_BORDER(cr); }
+		else COLOR_PIECE_WHITE_BORDER(cr);
+
+		cairo_rectangle(cr, x, y * w, PIECE_SIZE * w, PIECE_HEIGHT * w);
+
+		if (goal) y -= PIECE_HEIGHT;
+		else y += PIECE_HEIGHT;
+
+		cairo_stroke(cr);
+	}
+	
 }

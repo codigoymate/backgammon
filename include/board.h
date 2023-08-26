@@ -8,6 +8,7 @@
 #define TRIANGLE_HEIGHT						0.43
 #define PLACE_SIZE							0.071428571
 #define PIECE_SIZE							0.06
+#define PIECE_HEIGHT						0.015
 #define MARK_HEIGHT							0.03
 #define COLOR_BACKGROUND(cr)				cairo_set_source_rgb(cr, 0.4, 0.2, 0.0)
 #define COLOR_BAR(cr)						cairo_set_source_rgb(cr, 0.2, 0.1, 0.0)
@@ -35,7 +36,7 @@ typedef struct place_t {
 typedef struct board_t {
 	GtkDrawingArea *drawing_area;
 	Place places[24];
-	gint prison[2];
+	gint prison[2], goal[2];
 	gint selected, prison_sel;
 	guint dice[2];
 	gboolean consumed_dice[4];
