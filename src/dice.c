@@ -60,11 +60,18 @@ void dice_draw_single(cairo_t *cr, guint value, gdouble x, gdouble y, gint w, gi
 	
 }
 
-void dice_draw(cairo_t *cr, guint dice[], gint w, gint h) {
+void dice_draw(cairo_t *cr, guint dice[], gboolean consumed[], gint w, gint h) {
 	guint i;
 	gdouble x = 0.6;
 	for (i = 0; i < (dice[0] == dice[1] ? 4 : 2); i ++) {
 		dice_draw_single(cr, dice[i % 2], x, 0.47 - DICE_SIZE / 2, w, h);
+
+		if (consumed[i]) {
+			COLOR_DICE_DISABLE(cr);
+			draw_rounded_rectangle(cr, x * w, (0.47 - DICE_SIZE / 2) * h, DICE_SIZE * w, DICE_SIZE * w, DICE_SIZE * w * 0.18);
+			cairo_fill(cr);
+		}
+
 		x += DICE_SIZE + 0.01;
 	}
 }

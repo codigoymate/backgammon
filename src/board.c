@@ -64,7 +64,7 @@ static gboolean board_on_draw(GtkWidget *area, cairo_t *cr, gpointer data) {
 	}
 
 	// Dados
-	dice_draw(cr, board->dice, w, h);
+	dice_draw(cr, board->dice, board->consumed_dice, w, h);
 
 	// Prisiones
 	draw_prison(cr, bg, 0, w, h);
