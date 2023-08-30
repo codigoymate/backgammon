@@ -71,6 +71,12 @@ void check_selection(Backgammon *bg) {
 
 		dice_value = bg->board->dice[i % 2];
 		destiny = bg->board->selected + dice_value * bg_current_player(bg)->direction;
+
+		// Check goal selection
+		if (bg_all_pieces_in_territory(bg)) {
+			g_print("goal selection\n");
+		}
+
 		if (destiny < 0 || destiny > 23) continue;
 
 		// If the destination has opponent's pieces

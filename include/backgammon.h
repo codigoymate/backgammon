@@ -117,4 +117,12 @@ void bg_move_from_prison(Backgammon *bg, gint destiny);
  */
 gboolean bg_player_can_move(Backgammon *bg);
 
+/**
+ * @brief Checks if all the pieces of the current player are in their territory.
+ * 
+ * @param bg Backgammon instance
+ * @return gboolean True if all the pieces are in the territory of the current player.
+*/
+gboolean bg_all_pieces_in_territory(Backgammon *bg);
+
 #endif

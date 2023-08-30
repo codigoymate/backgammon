@@ -350,3 +350,32 @@ gboolean bg_player_can_move(Backgammon *bg) {
 
 	return FALSE;
 }
+
+/**
+ * @brief Checks if all the pieces of the current player are in their territory.
+ * 
+ * @param bg Backgammon instance
+ * @return gboolean True if all the pieces are in the territory of the current player.
+*/
+gboolean bg_all_pieces_in_territory(Backgammon *bg) {
+	Player *cplayer;
+	Board *board;
+	guint i, start, end;
+
+	cplayer = bg_current_player(bg);
+	board = bg->board;
+
+	if (cplayer->direction == -1) {
+		if (board->prison[1]) return FALSE;
+		start = 6; end = 23;
+	} else {
+		if (board->prison[0]) return FALSE;
+		start = 0; end = 18;
+	}
+	
+	for (i = start; i < end; i ++) {
+		if (board->places[i].data * cplayer->direction > 0) return FALSE;
+	}
+
+	return TRUE;
+}

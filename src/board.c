@@ -98,6 +98,7 @@ void board_free(Board *board) {
 }
 
 void board_init(Board *board) {
+	
 	board->places[0].data = 2;
 	board->places[5].data = -5;
 	board->places[7].data = -3;
@@ -106,6 +107,9 @@ void board_init(Board *board) {
 	board->places[16].data = 3;
 	board->places[18].data = 5;
 	board->places[23].data = -2;
+	
+	/*board->places[4].data = 2;
+	board->places[20].data = -2;*/
 }
 
 void board_reset(Board *board) {
