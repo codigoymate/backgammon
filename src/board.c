@@ -74,6 +74,10 @@ static gboolean board_on_draw(GtkWidget *area, cairo_t *cr, gpointer data) {
 	draw_goal(cr, bg, 0, w, h);
 	draw_goal(cr, bg, 1, w, h);
 
+	// Goal marks
+	draw_mark(cr, board->goal[0], w, h);
+	draw_mark(cr, board->goal[1], w, h);
+
 	return TRUE;
 }
 
@@ -98,7 +102,7 @@ void board_free(Board *board) {
 }
 
 void board_init(Board *board) {
-	
+	/*
 	board->places[0].data = 2;
 	board->places[5].data = -5;
 	board->places[7].data = -3;
@@ -107,9 +111,10 @@ void board_init(Board *board) {
 	board->places[16].data = 3;
 	board->places[18].data = 5;
 	board->places[23].data = -2;
-	
-	/*board->places[4].data = 2;
-	board->places[20].data = -2;*/
+	*/
+
+	board->places[4].data = -2;
+	board->places[20].data = 2;
 }
 
 void board_reset(Board *board) {
@@ -137,8 +142,16 @@ void board_reset(Board *board) {
 	board->prison[0] = 0;
 	board->prison[1] = 0;
 
-	board->goal[0] = 0;
-	board->goal[1] = 0;
+	board->goal[0].id = 0;
+	board->goal[0].data = 0;
+	board->goal[0].x = board->goal[1].x = 1.0 - PLACE_SIZE * 1;
+	board->goal[0].y = 0;
+	board->goal[0].mark = FALSE;
+
+	board->goal[1].id = 23;
+	board->goal[1].data = 0;
+	board->goal[1].y = 1.0 - TRIANGLE_HEIGHT;
+	board->goal[1].mark = FALSE;
 
 	board->dice[0] = 1;
 	board->dice[1] = 1;
@@ -151,6 +164,9 @@ void board_clear_marks(Board *board) {
 	guint i;
 	for (i = 0; i < 24; i ++)
 		board->places[i].mark = FALSE;
+
+	board->goal[0].mark = FALSE;
+	board->goal[1].mark = FALSE;
 }
 
 void board_redraw(Board *board) {

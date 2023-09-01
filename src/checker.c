@@ -46,6 +46,27 @@ void check_prison_selection(Backgammon *bg) {
 }
 
 /**
+ * @brief Checks if the dice value allows moving the piece to the goal.
+ * Put a mark to current goal if checks.
+ * @param bg Backgammon instance.
+ * @param dice_value The value of the dice.
+ */
+void check_goal_selection(Backgammon *bg, gint dice_value) {
+	gint selected;
+	selected = bg->board->selected;
+
+	if (bg_current_player(bg)->direction == -1) {
+		if (selected < 6) {
+			if (dice_value - selected == 1) bg->board->goal[0].mark = TRUE;
+		}
+	} else {
+		if (selected > 17) {
+			if (dice_value + selected == 24) bg->board->goal[1].mark = TRUE;
+		}
+	}
+}
+
+/**
  * @brief Searches for possible movements for the current player.
  * Takes into account whether the destination is a friendly or enemy piece.
  * Also considers consumed movements.
@@ -74,7 +95,7 @@ void check_selection(Backgammon *bg) {
 
 		// Check goal selection
 		if (bg_all_pieces_in_territory(bg)) {
-			g_print("goal selection\n");
+			check_goal_selection(bg, dice_value);
 		}
 
 		if (destiny < 0 || destiny > 23) continue;
