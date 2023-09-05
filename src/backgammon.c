@@ -9,9 +9,11 @@
  */
 
 #include <backgammon.h>
-#include <utils.h>
+//#include <utils.h>
 
 #include <player.h>
+
+#include <new_dialog.h>
 
 /**
  * @brief Frees the Backgammon instance.
@@ -40,25 +42,7 @@ static void bg_on_window_destroyed(GtkApplicationWindow *window, gpointer data) 
  * @param data Backgammon instance
  */
 static void new_game_menu_item_activate(GtkMenuItem *menu_item, gpointer data) {
-	Backgammon *bg = (Backgammon *)data;
-
-	if (bg->status != S_NOT_PLAYING) {
-		if (!question(GTK_WIDGET(bg->window), "End the current game?")) return;
-	}
-
-	bg->player[0].play_func = human_play_func;
-	bg->player[0].name = g_string_new("Human");
-	bg->player[0].piece = WHITE;
-	bg->player[0].direction = 1;
-	bg->player[1].play_func = human_play_func;
-	bg->player[1].name = g_string_new("AI");
-	bg->player[1].piece = BLACK;
-	bg->player[1].direction = -1;
-
-	board_init(bg->board);
-	board_redraw(bg->board);
-
-	bg_next_step(bg);
+	new_dialog_show(new_dialog_new((Backgammon *)data));
 }
 
 /**
@@ -93,6 +77,8 @@ Backgammon *bg_new(int argc, char *argv[]) {
 	GdkScreen *screen;
 
 	bg = (Backgammon *)g_malloc(sizeof(Backgammon));
+	bg->player[0].name = g_string_new("");
+	bg->player[1].name = g_string_new("");
 
 	gtk_init(&argc, &argv);
 
