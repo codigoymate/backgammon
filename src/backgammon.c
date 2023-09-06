@@ -287,7 +287,7 @@ void bg_move_from_prison(Backgammon *bg, gint destiny) {
 	gint len, i;
 	// Distance traveled
 	if (bg_current_player(bg)->direction == 1) len = destiny + 1;
-	else len = 23 - destiny;
+	else len = 24 - destiny;
 
 	// Deactivate the die according to the distance
 	for (i = 0; i < (bg->board->dice[0] == bg->board->dice[1] ? 4 : 2); i++) {
@@ -298,13 +298,12 @@ void bg_move_from_prison(Backgammon *bg, gint destiny) {
 		}
 	}
 
-	// If the destination is not an enemy
-	if (bg->board->places[destiny].data * bg_current_player(bg)->direction >= 0) {
-		// Remove from source
-
-		bg->board->prison[bg_current_player(bg)->direction == 1 ? 0 : 1] 
+	// Remove from source (prison)
+	bg->board->prison[bg_current_player(bg)->direction == 1 ? 0 : 1] 
 					-= bg_current_player(bg)->direction;
 
+	// If the destination is not an enemy
+	if (bg->board->places[destiny].data * bg_current_player(bg)->direction >= 0) {
 		bg->board->places[destiny].data += bg_current_player(bg)->direction;
 	} else {
 		// If it's an enemy...
