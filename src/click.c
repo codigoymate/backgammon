@@ -73,6 +73,7 @@ void dice_click(Backgammon *bg) {
 void place_click(Backgammon *bg, Place *place) {
 	
 	Board *b = bg->board;
+	gint value;
 
 	// Si el lugar a seleccionar tiene una marca
 	if (place->mark) {
@@ -98,6 +99,7 @@ void place_click(Backgammon *bg, Place *place) {
 		if (!place->data) {
 			// Deselecciona
 			b->selected = -1;
+			b->prison_sel = -1;
 			board_redraw(b);
 			return ;
 		}
@@ -106,6 +108,20 @@ void place_click(Backgammon *bg, Place *place) {
 		if (place->data * bg_current_player(bg)->direction < 0) {
 			// Deselecciona
 			b->selected = -1;
+			b->prison_sel = -1;
+			board_redraw(b);
+			return;
+		}
+
+		// si hay fichas en la prision del contrincante ...
+		if (bg_current_player(bg)->direction == -1)
+			value = b->prison[1];
+		else
+			value = b->prison[0];
+
+		if (value) {
+			b->selected = -1;
+			b->prison_sel = -1;
 			board_redraw(b);
 			return;
 		}
