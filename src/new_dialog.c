@@ -2,6 +2,11 @@
 
 #include <utils.h>
 
+/**
+ * @brief Update clockwise of player 1 to set player's directions.
+ * 
+ * @param dialog NewDialog instance
+ */
 void update_clockwise(NewDialog *dialog) {
 	if (dialog->clockwise) {
 		gtk_button_set_image(dialog->clockwise_button, 
@@ -16,6 +21,11 @@ void update_clockwise(NewDialog *dialog) {
 	}
 }
 
+/**
+ * @brief Update piece color of player 1.
+ * 
+ * @param dialog NewDialog instance
+ */
 void update_piece(NewDialog *dialog) {
 	if (dialog->white) {
 		gtk_button_set_image(dialog->piece_button, 
@@ -30,15 +40,32 @@ void update_piece(NewDialog *dialog) {
 	}
 }
 
+/**
+ * @brief Destroy the NewDialog
+ * 
+ * @param dialog NewDialog instance
+ */
 void new_dialog_free(NewDialog *dialog) {
 	gtk_widget_destroy(GTK_WIDGET(dialog->window));
 	//g_free(dialog);
 }
 
+/**
+ * @brief Occurs when dialog window is closed
+ * 
+ * @param widget GtkWindow widget
+ * @param data User data (NewDialog)
+ */
 static void new_dialog_destroy(GtkWidget *widget, gpointer data) {
 	new_dialog_free((NewDialog *) data);
 }
 
+/**
+ * @brief On clockwise player 1 button click
+ * 
+ * @param widget Clockwise button
+ * @param data User data (NewDialog)
+ */
 static void clockwise_button_click(GtkWidget *widget, gpointer data) {
 	NewDialog *dialog;
 	dialog = (NewDialog *) data;
@@ -49,6 +76,12 @@ static void clockwise_button_click(GtkWidget *widget, gpointer data) {
 	update_clockwise(dialog);
 }
 
+/**
+ * @brief On piece player 1 button click
+ * 
+ * @param widget Piece button
+ * @param data User data (NewDialog)
+ */
 static void piece_button_click(GtkWidget *widget, gpointer data) {
 	NewDialog *dialog;
 	dialog = (NewDialog *) data;
@@ -59,6 +92,13 @@ static void piece_button_click(GtkWidget *widget, gpointer data) {
 	update_piece(dialog);
 }
 
+/**
+ * @brief Start button clicked
+ * Sets player 1 and 2 data and start game
+ * 
+ * @param widget Start button
+ * @param data User data (NewDialog)
+ */
 static void new_dialog_start_button_clicked(GtkWidget *widget, gpointer data) {
 	NewDialog *dialog;
 	Backgammon *bg;
@@ -115,6 +155,12 @@ static void new_dialog_start_button_clicked(GtkWidget *widget, gpointer data) {
 	new_dialog_free((NewDialog *) data);
 }
 
+/**
+ * @brief creates the "New Game" instance
+ * 
+ * @param bg Backgammon instance
+ * @return NewDialog* NewDialog instance
+ */
 NewDialog *new_dialog_new(Backgammon *bg) {
 	NewDialog *dialog;
 	GtkBuilder *builder;
@@ -161,6 +207,11 @@ NewDialog *new_dialog_new(Backgammon *bg) {
 	return dialog;
 }
 
+/** 
+ * @brief Show the "New Game" dialog
+ * 
+ * @param dialog NewDialog instance
+ */
 void new_dialog_show(NewDialog *dialog) {
 	gtk_widget_show_all(GTK_WIDGET(dialog->window));
 }

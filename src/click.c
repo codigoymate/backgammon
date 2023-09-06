@@ -1,3 +1,12 @@
+/**
+ * @file click.c
+ * @author Javier Candales (javier_candales@yahoo.com.ar)
+ * @brief Implementation of click.h
+ * @date 2023-09-06
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
 #include <click.h>
 
 #include <backgammon.h>
@@ -5,10 +14,37 @@
 #include <checker.h>
 #include <board.h>
 
+/**
+ * @brief Occurs when a click is made on the dice set.
+ * @param bg Backgammon instance
+ */
 void dice_click(Backgammon *bg);
+
+/**
+ * @brief Occurs when a click is made on a place on the board.
+ * 
+ * @param bg Backgammon instance
+ * @param place Target place
+ */
 void place_click(Backgammon *bg, Place *place);
+
+/**
+ * @brief Occurs when a click is made on a prison.
+ * 
+ * @param bg Backgammon instance
+ * @param prison Target prison
+ */
 void prison_click(Backgammon *bg, gint prison);
 
+/**
+ * @brief Occurs when a click is made on the board.
+ * Checks and calls functions for places, dice set, and prison clicked.
+ * 
+ * @param drw DrawingArea component
+ * @param event Mouse button event
+ * @param data User data (Backgammon)
+ * @return gboolean TRUE if drawing is successful
+ */
 gboolean board_on_click(GtkDrawingArea *drw, GdkEventButton *event, gpointer data) {
 	gdouble x, y, px, py, w, h;
 	gint i;
@@ -17,7 +53,7 @@ gboolean board_on_click(GtkDrawingArea *drw, GdkEventButton *event, gpointer dat
 	w = (gdouble) gtk_widget_get_allocated_width(GTK_WIDGET(drw));
 	h = (gdouble) gtk_widget_get_allocated_height(GTK_WIDGET(drw));
 
-	// Relación de aspecto
+	// Aspect ratio
 	if (h > w * BOARD_RATIO) {
 		h = w * BOARD_RATIO;
 	} else {
@@ -62,6 +98,11 @@ gboolean board_on_click(GtkDrawingArea *drw, GdkEventButton *event, gpointer dat
 	return TRUE;
 }
 
+/**
+ * @brief Occurs when a click is made on the dice set.
+ * On dice click, changes the game state to MOVE PIECES (Human player).
+ * @param bg Backgammon instance
+ */
 void dice_click(Backgammon *bg) {
 	dice_roll(bg->board->dice, bg->board->consumed_dice);
 	board_redraw(bg->board);
@@ -70,50 +111,53 @@ void dice_click(Backgammon *bg) {
 	bg_next_step(bg);
 }
 
+/**
+ * @brief Occurs when a click is made on a place on the board.
+ * 
+ * @param bg Backgammon instance
+ * @param place Target place
+ */
 void place_click(Backgammon *bg, Place *place) {
-	
 	Board *b = bg->board;
 	gint value;
 
-	// Si el lugar a seleccionar tiene una marca
+	// If the selected place has a mark
 	if (place->mark) {
-		// Si no hay lugar seleccionado, mueve desde la prisión
+		// If no place is currently selected, move from prison
 		if (b->selected == -1) bg_move_from_prison(bg, place->id);
 		else bg_move_piece(bg, b->selected, place->id);
 		b->selected = -1;
 		b->prison_sel = -1;
 		board_clear_marks(b);
 
-		// Comprueba si sigue habiendo movimientos
+		// Check if there are still valid moves
 		if (!bg_player_can_move(bg)) {
-			/*backgammon_next_turn(bg);*/
 			bg->status = S_END_TURN;
 			bg_next_step(bg);
-
 		}
-	} else { // Si el lugar a seleccionar no está marcado
-		// Borra el resto de las marcas
+	} else { // If the selected place is not marked
+		// Clear other marks
 		board_clear_marks(b);
 
-		// No hay fichas
+		// No pieces on the selected place
 		if (!place->data) {
-			// Deselecciona
-			b->selected = -1;
-			b->prison_sel = -1;
-			board_redraw(b);
-			return ;
-		}
-
-		// Si son las fichas de otro jugador ...
-		if (place->data * bg_current_player(bg)->direction < 0) {
-			// Deselecciona
+			// Deselect
 			b->selected = -1;
 			b->prison_sel = -1;
 			board_redraw(b);
 			return;
 		}
 
-		// si hay fichas en la prision del contrincante ...
+		// If it's the opponent's pieces ...
+		if (place->data * bg_current_player(bg)->direction < 0) {
+			// Deselect
+			b->selected = -1;
+			b->prison_sel = -1;
+			board_redraw(b);
+			return;
+		}
+
+		// If there are pieces in the opponent's prison ...
 		if (bg_current_player(bg)->direction == -1)
 			value = b->prison[1];
 		else
@@ -126,18 +170,22 @@ void place_click(Backgammon *bg, Place *place) {
 			return;
 		}
 
-		// Selecciona el lugar
+		// Select the place
 		b->selected = place->id;
 
-		// Chequea los destinos según el resultado de los dados
+		// Check valid destinations based on the dice roll
 		check_selection(bg);
-
 	}
 
 	board_redraw(b);
-
 }
 
+/**
+ * @brief Occurs when a click is made on a prison.
+ * 
+ * @param bg Backgammon instance
+ * @param prison Target prison
+ */
 void prison_click(Backgammon *bg, gint prison) {
 	bg->board->selected = -1;
 
