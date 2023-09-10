@@ -41,6 +41,8 @@ typedef struct board_t {
 	guint dice[2];
 	gboolean consumed_dice[4];
 	gboolean enable_dice, enable_places;
+
+	GList *movements;
 } Board;
 
 Board *board_new(GtkBuilder *builder, void *bg);

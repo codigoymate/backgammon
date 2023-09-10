@@ -92,6 +92,8 @@ Board *board_new(GtkBuilder *builder, void *bg) {
 		GDK_BUTTON_PRESS_MASK);
 	g_signal_connect(board->drawing_area, "button-press-event", G_CALLBACK(board_on_click), bg);
 
+	board->movements = NULL;
+
 	board_reset(board);
 
 	return board;
