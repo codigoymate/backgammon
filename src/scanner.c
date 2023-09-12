@@ -141,11 +141,11 @@ void scan_movements(Backgammon *bg) {
 
 				// If there are two or more opponent's pieces
 				if (value != 1) continue;
-
-				// Add movement to list
-				board->movements = g_list_append(board->movements,
-						movement_new(i, destiny, FALSE, FALSE));
 			}
+
+			// Add movement to list
+			board->movements = g_list_append(board->movements,
+					movement_new(i, destiny, FALSE, FALSE));
 		}
 	}
 
