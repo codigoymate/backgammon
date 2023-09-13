@@ -13,6 +13,7 @@
 #include <dice.h>
 #include <checker.h>
 #include <board.h>
+#include <movement.h>
 
 /**
  * @brief Occurs when a click is made on the dice set.
@@ -119,62 +120,69 @@ void dice_click(Backgammon *bg) {
  */
 void place_click(Backgammon *bg, Place *place) {
 	Board *b = bg->board;
-	gint value;
+	GList *iter;
+	Movement *m;
+	guint cdir;
+
+	cdir = bg_current_player(bg)->direction;
 
 	// If the selected place has a mark
 	if (place->mark) {
-		// If no place is currently selected, move from prison
-		if (b->selected == -1) bg_move_from_prison(bg, place->id);
-		else bg_move_piece(bg, b->selected, place->id);
-		b->selected = -1;
-		b->prison_sel = -1;
-		board_clear_marks(b);
+		if (b->selected != -1) {
+			// Place origin selected
+			for (iter = b->movements; iter; iter = iter->next) {
+				m = (Movement *) iter->data;
+				if (m->src == b->selected && m->dest == place->id) {
+					// Clear selections
+					b->prison_sel = -1;
+					b->selected = -1;
+					board_clear_marks(b);
 
-		// Check if there are still valid moves
-		if (!bg_player_can_move(bg)) {
-			bg->status = S_END_TURN;
-			bg_next_step(bg);
+					// Move piece
+					move_piece(bg, m);
+					break;
+				}
+			}
+		} else {
+			// Prison origin selected
+			for (iter = b->movements; iter; iter = iter->next) {
+				m = (Movement *) iter->data;
+				if (m->prison_src && m->dest == place->id) {
+					// Clear selections
+					b->prison_sel = -1;
+					b->selected = -1;
+					board_clear_marks(b);
+
+					// Move piece
+					move_piece(bg, m);
+					break;
+				}
+			}
 		}
 	} else { // If the selected place is not marked
-		// Clear other marks
+
+		// Clear all marks
 		board_clear_marks(b);
 
-		// No pieces on the selected place
-		if (!place->data) {
-			// Deselect
-			b->selected = -1;
-			b->prison_sel = -1;
-			board_redraw(b);
-			return;
-		}
-
-		// If it's the opponent's pieces ...
-		if (place->data * bg_current_player(bg)->direction < 0) {
-			// Deselect
-			b->selected = -1;
-			b->prison_sel = -1;
-			board_redraw(b);
-			return;
-		}
-
-		// If there are pieces in the opponent's prison ...
-		if (bg_current_player(bg)->direction == -1)
-			value = b->prison[1];
-		else
-			value = b->prison[0];
-
-		if (value) {
-			b->selected = -1;
-			b->prison_sel = -1;
-			board_redraw(b);
-			return;
-		}
+		// Unselect prisons
+		b->prison_sel = -1;
 
 		// Select the place
 		b->selected = place->id;
 
-		// Check valid destinations based on the dice roll
-		check_selection(bg);
+		// Find movements by source
+		for (iter = b->movements; iter; iter = iter->next) {
+			m = (Movement *)iter->data;
+			if (m->src == place->id) {
+				// Mark the destiny
+				if (m->goal_dest) {
+					if (cdir == -1) b->goal[0].mark = TRUE;
+					else b->goal[1].mark = TRUE;
+				} else {
+					b->places[m->dest].mark = TRUE;
+				}
+			}
+		}
 	}
 
 	board_redraw(b);
@@ -187,13 +195,24 @@ void place_click(Backgammon *bg, Place *place) {
  * @param prison Target prison
  */
 void prison_click(Backgammon *bg, gint prison) {
+	GList *iter;
+	Movement *m;
 	bg->board->selected = -1;
 
+	// If not prisoners ...
 	if (bg->board->prison[prison] * bg_current_player(bg)->direction <= 0) {
 		board_clear_marks(bg->board);
 	} else {
+		// Select the prison
 		bg->board->prison_sel = prison;
-		check_selection(bg);
+		
+		// Mark all possible movements
+		for (iter = bg->board->movements; iter; iter = iter->next) {
+			m = (Movement *) iter->data;
+			if (m->prison_src) {
+				bg->board->places[m->dest].mark = TRUE;
+			}
+		}
 	}
 
 	board_redraw(bg->board);

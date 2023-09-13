@@ -1,14 +1,14 @@
 /**
- * @file scanner.c
+ * @file movement.c
  * @author Javier Candales (javier_candales@yahoo.com.ar)
- * @brief Implementation of scanner.h
+ * @brief Implementation of movement.h
  * @date 2023-09-09
  * 
  * @copyright Copyright (c) 2023
  * 
  */
 
-#include <scanner.h>
+#include <movement.h>
 
 /**
  * @brief Creates a new instance of Movement
@@ -161,3 +161,88 @@ void clean_movements(Backgammon *bg) {
 	g_list_free(bg->board->movements);
 	bg->board->movements = NULL;
 }
+
+/**
+ * @brief Moves a game piece.
+ * There must be pieces at the source position (from the current player).
+ * Removes one piece from the source and adds it to the destination.
+ * If the destination has an opponent's piece, the current player's prison captures an opponent's piece.
+ * 
+ * @param bg Backgammon instance
+ * @param movement the register movement
+ */
+void move_piece(Backgammon *bg, Movement *m) {
+	gint len, i;
+
+	// Move from any place ...
+	if (m->src != -1) {
+
+		// TODO: to goal movement ...
+
+		// Calculate length
+		len = m->dest - m->src;
+		if (len < 0) len *= -1;
+
+		// Deactivate the die according to the distance
+		for (i = 0; i < (bg->board->dice[0] == bg->board->dice[1] ? 4 : 2); i++) {
+			if (bg->board->consumed_dice[i]) continue;
+			if (bg->board->dice[i % 2] == len) {
+				bg->board->consumed_dice[i] = TRUE;
+				break;
+			}
+		}
+
+		// Remove from source
+		bg->board->places[m->src].data -= bg_current_player(bg)->direction;
+
+		// If the destination is not an enemy
+		if (bg->board->places[m->dest].data * bg_current_player(bg)->direction >= 0) {
+			bg->board->places[m->dest].data += bg_current_player(bg)->direction;
+		} else {
+			// If it's an enemy...
+
+			// Put the piece in prison
+			bg->board->prison[bg_current_player(bg)->direction == -1 ? 0 : 1] +=
+					bg_opponent(bg)->direction;
+
+			// Replace the current piece
+			bg->board->places[m->dest].data *= -1;
+		}
+	} else { // Move from prison
+		// Calculate length
+		if (bg_current_player(bg)->direction == 1) len = m->dest + 1;
+		else len = 24 - m->dest;
+
+		// Deactivate the die according to the distance
+		for (i = 0; i < (bg->board->dice[0] == bg->board->dice[1] ? 4 : 2); i++) {
+			if (bg->board->consumed_dice[i]) continue;
+			if (bg->board->dice[i % 2] == len) {
+				bg->board->consumed_dice[i] = TRUE;
+				break;
+			}
+		}
+
+		// Remove from source (prison)
+		bg->board->prison[bg_current_player(bg)->direction == 1 ? 0 : 1] 
+					-= bg_current_player(bg)->direction;
+
+		// If the destination is not an enemy
+		if (bg->board->places[m->dest].data * bg_current_player(bg)->direction >= 0) {
+			bg->board->places[m->dest].data += bg_current_player(bg)->direction;
+		} else {
+			// If it's an enemy...
+
+			// Put the piece in prison
+			bg->board->prison[bg_current_player(bg)->direction == -1 ? 0 : 1] +=
+					bg_opponent(bg)->direction;
+
+			// Replace the current piece
+			bg->board->places[m->dest].data *= -1;
+		}
+		
+	}
+
+	// Next step
+	bg_next_step(bg);
+}
+

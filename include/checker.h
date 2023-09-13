@@ -12,11 +12,5 @@
 
 #include <backgammon.h>
 
-/**
- * @brief Searches for possible movements for the current player.
- * 
- * @param bg Backgammon instance.
- */
-void check_selection(Backgammon *bg);
 
 #endif

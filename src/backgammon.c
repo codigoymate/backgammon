@@ -232,98 +232,12 @@ Player *bg_player_by_data(Backgammon *bg, gint data) {
 }
 
 /**
- * @brief Moves a game piece.
- * There must be pieces at the source position (from the current player).
- * Removes one piece from the source and adds it to the destination.
- * If the destination has an opponent's piece, the current player's prison captures an opponent's piece.
- * 
- * @param bg Backgammon instance
- * @param source starting position
- * @param destiny destination position
- */
-void bg_move_piece(Backgammon *bg, gint source, gint destiny) {
-	gint len, i;
-	// Distance traveled
-	len = destiny - source;
-	if (len < 0) len *= -1;
-	// Deactivate the die according to the distance
-	for (i = 0; i < (bg->board->dice[0] == bg->board->dice[1] ? 4 : 2); i++) {
-		if (bg->board->consumed_dice[i]) continue;
-		if (bg->board->dice[i % 2] == len) {
-			bg->board->consumed_dice[i] = TRUE;
-			break;
-		}
-	}
-
-	// If the destination is not an enemy
-	if (bg->board->places[destiny].data * bg_current_player(bg)->direction >= 0) {
-		// Remove from source
-		bg->board->places[source].data -= bg_current_player(bg)->direction;
-
-		bg->board->places[destiny].data += bg_current_player(bg)->direction;
-	} else {
-		// If it's an enemy...
-
-		// Put the piece in prison
-		bg->board->prison[bg_current_player(bg)->direction == -1 ? 0 : 1] +=
-				bg_opponent(bg)->direction;
-
-		// Replace the current piece
-		bg->board->places[destiny].data *= -1;
-	}
-}
-
-/**
- * @brief Moves a game piece from selected prison.
- * 
- * There must be pieces at the prison (from the current player).
- * Removes one piece from the prison and adds it to the destination.
- * If the destination has an opponent's piece, the current player's prison captures an opponent's piece.
- * 
- * @param bg Backgammon instance
- * @param destiny Destination position
- */
-void bg_move_from_prison(Backgammon *bg, gint destiny) {
-	gint len, i;
-	// Distance traveled
-	if (bg_current_player(bg)->direction == 1) len = destiny + 1;
-	else len = 24 - destiny;
-
-	// Deactivate the die according to the distance
-	for (i = 0; i < (bg->board->dice[0] == bg->board->dice[1] ? 4 : 2); i++) {
-		if (bg->board->consumed_dice[i]) continue;
-		if (bg->board->dice[i % 2] == len) {
-			bg->board->consumed_dice[i] = TRUE;
-			break;
-		}
-	}
-
-	// Remove from source (prison)
-	bg->board->prison[bg_current_player(bg)->direction == 1 ? 0 : 1] 
-					-= bg_current_player(bg)->direction;
-
-	// If the destination is not an enemy
-	if (bg->board->places[destiny].data * bg_current_player(bg)->direction >= 0) {
-		bg->board->places[destiny].data += bg_current_player(bg)->direction;
-	} else {
-		// If it's an enemy...
-
-		// Put the piece in prison
-		bg->board->prison[bg_current_player(bg)->direction == -1 ? 0 : 1] +=
-				bg_opponent(bg)->direction;
-
-		// Replace the current piece
-		bg->board->places[destiny].data *= -1;
-	}
-}
-
-/**
  * @brief Indicates if the current player can make a move.
  * 
  * @param bg Backgammon instance
  * @return gboolean true if the player can move
  */
-gboolean bg_player_can_move(Backgammon *bg) {
+/*gboolean bg_player_can_move(Backgammon *bg) {
 	gint i;
 	Board *b;
 
@@ -334,7 +248,7 @@ gboolean bg_player_can_move(Backgammon *bg) {
 	}
 
 	return FALSE;
-}
+}*/
 
 /**
  * @brief Checks if all the pieces of the current player are in their territory.

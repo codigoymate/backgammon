@@ -1,14 +1,14 @@
 /**
- * @file scanner.h
+ * @file movement.h
  * @author Javier Candales (javier_candales@yahoo.com.ar)
- * @brief Module for scanning possible moves
+ * @brief Module for scanning possible moves and move pieces
  * @date 2023-09-07
  * 
  * @copyright Copyright (c) 2023
  * 
  */
-#ifndef SCANNER_H
-#define SCANNER_H
+#ifndef MOVEMENT_H
+#define MOVEMENT_H
 
 #include <gtk/gtk.h>
 #include <backgammon.h>
@@ -47,5 +47,13 @@ void scan_movements(Backgammon *bg);
  * @param bg Backgammon's instance.
  */
 void clean_movements(Backgammon *bg);
+
+/**
+ * @brief Moves a game piece.
+ * 
+ * @param bg Backgammon instance
+ * @param movement the register movement
+ */
+void move_piece(Backgammon *bg, Movement *movement);
 
 #endif

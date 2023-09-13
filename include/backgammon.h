@@ -93,29 +93,12 @@ Player *bg_opponent(Backgammon *bg);
 Player *bg_player_by_data(Backgammon *bg, gint data);
 
 /**
- * @brief Moves a game piece.
- * 
- * @param bg Backgammon instance
- * @param source starting position
- * @param destiny destination position
- */
-void bg_move_piece(Backgammon *bg, gint source, gint destiny);
-
-/**
- * @brief Moves a game piece from selected prison.
- * 
- * @param bg Backgammon instance
- * @param destiny Destination position
- */
-void bg_move_from_prison(Backgammon *bg, gint destiny);
-
-/**
  * @brief Indicates if the current player can make a move.
  * 
  * @param bg Backgammon instance
  * @return gboolean true if the player can move
  */
-gboolean bg_player_can_move(Backgammon *bg);
+//gboolean bg_player_can_move(Backgammon *bg);
 
 /**
  * @brief Checks if all the pieces of the current player are in their territory.
