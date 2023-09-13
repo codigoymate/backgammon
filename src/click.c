@@ -11,7 +11,6 @@
 
 #include <backgammon.h>
 #include <dice.h>
-#include <checker.h>
 #include <board.h>
 #include <movement.h>
 
@@ -36,6 +35,14 @@ void place_click(Backgammon *bg, Place *place);
  * @param prison Target prison
  */
 void prison_click(Backgammon *bg, gint prison);
+
+/**
+ * @brief Occurs when a click is made on a goal on the board.
+ * 
+ * @param bg Backgammon instance
+ * @param goal Target goal
+ */
+void goal_click(Backgammon *bg, Place *goal);
 
 /**
  * @brief Occurs when a click is made on the board.
@@ -93,6 +100,17 @@ gboolean board_on_click(GtkDrawingArea *drw, GdkEventButton *event, gpointer dat
 					prison_click(bg, 1);
 				}
 			}
+		}
+
+		// Goal
+		for (i = 0; i < 2; i ++) {
+			px = bg->board->goal[i].x;
+			py = bg->board->goal[i].y;
+			if (x > px && x < px + PLACE_SIZE &&
+				y > py && y < py + TRIANGLE_HEIGHT) {
+					goal_click(bg, &bg->board->goal[i]);
+					break;
+				}
 		}
 	}
 
@@ -215,5 +233,35 @@ void prison_click(Backgammon *bg, gint prison) {
 		}
 	}
 
+	board_redraw(bg->board);
+}
+
+/**
+ * @brief Occurs when a click is made on a goal on the board.
+ * 
+ * @param bg Backgammon instance
+ * @param goal Target goal
+ */
+void goal_click(Backgammon *bg, Place *goal) {
+	GList *iter;
+	Movement *m;
+
+	// Goal must be marked
+	if (!goal->mark) return ;
+
+	// Find the movements
+	for (iter = bg->board->movements; iter; iter = iter->next) {
+		m = (Movement *) iter->data;
+		if (m->goal_dest) {
+			// Clear selections
+			bg->board->prison_sel = -1;
+			bg->board->selected = -1;
+			board_clear_marks(bg->board);
+
+			// Move piece
+			move_piece(bg, m);
+			break;
+		}
+	}
 	board_redraw(bg->board);
 }

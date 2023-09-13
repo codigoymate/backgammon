@@ -163,6 +163,38 @@ void clean_movements(Backgammon *bg) {
 }
 
 /**
+ * @brief Move a game piece from any place to current player's goal
+ * 
+ * @param bg Backgammon instance
+ * @param m the register movement
+ */
+void move_to_goal(Backgammon *bg, Movement *m) {
+	gint cdir, i, len;
+	cdir = bg_current_player(bg)->direction;
+
+	// Remove from source
+	bg->board->places[m->src].data -= cdir;
+
+	// Increse goal
+	bg->board->goal[cdir == 1 ? 1 : 0].data += cdir;
+
+	// Calculate len
+	if (cdir == -1) len = m->src + 1;
+	else len = 24 - m->src;
+
+	// Deactivate the die according to the distance
+	for (i = 0; i < (bg->board->dice[0] == bg->board->dice[1] ? 4 : 2); i++) {
+		if (bg->board->consumed_dice[i]) continue;
+		if (bg->board->dice[i % 2] == len) {
+			bg->board->consumed_dice[i] = TRUE;
+			break;
+		}
+	}
+
+	bg_next_step(bg);
+}
+
+/**
  * @brief Moves a game piece.
  * There must be pieces at the source position (from the current player).
  * Removes one piece from the source and adds it to the destination.
@@ -177,7 +209,11 @@ void move_piece(Backgammon *bg, Movement *m) {
 	// Move from any place ...
 	if (m->src != -1) {
 
-		// TODO: to goal movement ...
+		// If the destiny is a goal
+		if (m->goal_dest) {
+			move_to_goal(bg, m);
+			return;
+		}
 
 		// Calculate length
 		len = m->dest - m->src;
