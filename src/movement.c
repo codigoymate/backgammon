@@ -19,12 +19,14 @@
  * @param goal_dest destination as goal
  * @return Movement* a new instance of Movement
  */
-Movement *movement_new(gint src, gint dest, gboolean prison_src, gboolean goal_dest) {
+Movement *movement_new(gint src, gint dest, gboolean prison_src,
+		gboolean goal_dest, guint dice_value) {
 	Movement *m = (Movement *) g_malloc(sizeof(Movement));
 	m->dest = dest;
 	m->src = src;
 	m->prison_src = prison_src;
 	m->goal_dest = goal_dest;
+	m->dice_value = dice_value;
 	return m;
 }
 
@@ -56,7 +58,7 @@ GList *scan_prison_movements(Backgammon *bg) {
 			if (value != 1) continue;
 		}
 
-		list = g_list_append(list, movement_new(-1, destiny, TRUE, FALSE));
+		list = g_list_append(list, movement_new(-1, destiny, TRUE, FALSE, dice_value));
 	}
 
 	return list;
@@ -77,12 +79,12 @@ GList *scan_goal_movement(Backgammon *bg, GList *list, guint src, guint dice_val
 	if (bg_current_player(bg)->direction == -1) {
 		if (src < 6) {
 			if (dice_value - src == 1)
-				list = g_list_append(list, movement_new(src, -1, FALSE, TRUE));
+				list = g_list_append(list, movement_new(src, -1, FALSE, TRUE, dice_value));
 		}
 	} else {
 		if (src > 17) {
 			if (dice_value + src == 24)
-				list = g_list_append(list, movement_new(src, -1, FALSE, TRUE));
+				list = g_list_append(list, movement_new(src, -1, FALSE, TRUE, dice_value));
 		}
 	}
 	return list;
@@ -145,7 +147,7 @@ void scan_movements(Backgammon *bg) {
 
 			// Add movement to list
 			board->movements = g_list_append(board->movements,
-					movement_new(i, destiny, FALSE, FALSE));
+					movement_new(i, destiny, FALSE, FALSE, dice_value));
 		}
 	}
 
@@ -169,7 +171,7 @@ void clean_movements(Backgammon *bg) {
  * @param m the register movement
  */
 void move_to_goal(Backgammon *bg, Movement *m) {
-	gint cdir, i, len;
+	gint cdir, i;
 	cdir = bg_current_player(bg)->direction;
 
 	// Remove from source
@@ -178,14 +180,10 @@ void move_to_goal(Backgammon *bg, Movement *m) {
 	// Increse goal
 	bg->board->goal[cdir == 1 ? 1 : 0].data += cdir;
 
-	// Calculate len
-	if (cdir == -1) len = m->src + 1;
-	else len = 24 - m->src;
-
 	// Deactivate the die according to the distance
 	for (i = 0; i < (bg->board->dice[0] == bg->board->dice[1] ? 4 : 2); i++) {
 		if (bg->board->consumed_dice[i]) continue;
-		if (bg->board->dice[i % 2] == len) {
+		if (bg->board->dice[i % 2] == m->dice_value) {
 			bg->board->consumed_dice[i] = TRUE;
 			break;
 		}
@@ -204,7 +202,7 @@ void move_to_goal(Backgammon *bg, Movement *m) {
  * @param movement the register movement
  */
 void move_piece(Backgammon *bg, Movement *m) {
-	gint len, i;
+	gint i;
 
 	// Move from any place ...
 	if (m->src != -1) {
@@ -215,14 +213,10 @@ void move_piece(Backgammon *bg, Movement *m) {
 			return;
 		}
 
-		// Calculate length
-		len = m->dest - m->src;
-		if (len < 0) len *= -1;
-
 		// Deactivate the die according to the distance
 		for (i = 0; i < (bg->board->dice[0] == bg->board->dice[1] ? 4 : 2); i++) {
 			if (bg->board->consumed_dice[i]) continue;
-			if (bg->board->dice[i % 2] == len) {
+			if (bg->board->dice[i % 2] == m->dice_value) {
 				bg->board->consumed_dice[i] = TRUE;
 				break;
 			}
@@ -245,14 +239,11 @@ void move_piece(Backgammon *bg, Movement *m) {
 			bg->board->places[m->dest].data *= -1;
 		}
 	} else { // Move from prison
-		// Calculate length
-		if (bg_current_player(bg)->direction == 1) len = m->dest + 1;
-		else len = 24 - m->dest;
 
 		// Deactivate the die according to the distance
 		for (i = 0; i < (bg->board->dice[0] == bg->board->dice[1] ? 4 : 2); i++) {
 			if (bg->board->consumed_dice[i]) continue;
-			if (bg->board->dice[i % 2] == len) {
+			if (bg->board->dice[i % 2] == m->dice_value) {
 				bg->board->consumed_dice[i] = TRUE;
 				break;
 			}

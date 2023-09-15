@@ -20,6 +20,7 @@
 typedef struct movement_t {
     gint src, dest;
     gboolean prison_src, goal_dest;
+	guint dice_value;
 } Movement;
 
 /**
@@ -31,7 +32,8 @@ typedef struct movement_t {
  * @param goal_dest destination as goal
  * @return Movement* a new instance of Movement
  */
-Movement *movement_new(gint src, gint dest, gboolean prison_src, gboolean goal_dest);
+Movement *movement_new(gint src, gint dest, gboolean prison_src,
+			gboolean goal_dest, guint dice_value);
 
 /**
  * @brief Searches for possible moves for the current player.
