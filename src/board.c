@@ -1,3 +1,12 @@
+/**
+ * @file board.c
+ * @author Javier Candales (javier_candales@yahoo.com.ar)
+ * @brief Implementation of board.h
+ * @date 2023-09-16
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
 #include <board.h>
 #include <cairo.h>
 #include <dice.h>
@@ -6,6 +15,14 @@
 #include <draw.h>
 #include <click.h>
 
+/**
+ * @brief Occurs when drawing the board
+ * 
+ * @param area DrawingArea
+ * @param cr Cairo context
+ * @param data Backgammon instance
+ * @return gboolean TRUE if there were no problems while drawing
+ */
 static gboolean board_on_draw(GtkWidget *area, cairo_t *cr, gpointer data) {
 	gdouble w, h;
 	gint i;
@@ -19,18 +36,18 @@ static gboolean board_on_draw(GtkWidget *area, cairo_t *cr, gpointer data) {
 	w = gtk_widget_get_allocated_width(area);
 	h = gtk_widget_get_allocated_height(area);
 
-	// Relación de aspecto
+	// Aspect ratio
 	if (h > w * BOARD_RATIO) {
 		h = w * BOARD_RATIO;
 	} else {
 		w = h * (1.0 / BOARD_RATIO);
 	}
 
-	// Fondo
+	// Background
 	COLOR_BACKGROUND(cr);
 	cairo_paint(cr);
 
-	// Triangulos, fichas y marcas
+	// Triangles, pieces, and marks
 	for (i = 0; i < 24; i ++) {
 		draw_colored_triangle(cr, board->places[i], i % 2, w, h);
 		draw_piece_group(cr, bg, board->places[i], w, h);
@@ -43,7 +60,7 @@ static gboolean board_on_draw(GtkWidget *area, cairo_t *cr, gpointer data) {
 	cairo_rectangle(cr, w * 0.0714 * 13, 0, w * 0.0714, h);
 	cairo_fill(cr);
 
-	// Selección
+	// Selection
 	if (board->selected != -1) {
 		COLOR_SELECTION(cr);
 		cairo_rectangle(cr, board->places[board->selected].x * w,
@@ -63,10 +80,10 @@ static gboolean board_on_draw(GtkWidget *area, cairo_t *cr, gpointer data) {
 		cairo_stroke(cr);
 	}
 
-	// Dados
+	// Dice
 	dice_draw(cr, board->dice, board->consumed_dice, w, h);
 
-	// Prisiones
+	// Prisons
 	draw_prison(cr, bg, 0, w, h);
 	draw_prison(cr, bg, 1, w, h);
 
@@ -81,8 +98,15 @@ static gboolean board_on_draw(GtkWidget *area, cairo_t *cr, gpointer data) {
 	return TRUE;
 }
 
+/**
+ * @brief Creates an instance of Board
+ * 
+ * @param builder GtkBuilder for the DrawingArea
+ * @param bg Backgammon instance
+ * @return Board* New instance of Board
+ */
 Board *board_new(GtkBuilder *builder, void *bg) {
-	
+
 	Board *board = (Board *) g_malloc(sizeof(Board));
 
 	board->drawing_area = GTK_DRAWING_AREA(gtk_builder_get_object(builder, "board-area"));
@@ -99,10 +123,20 @@ Board *board_new(GtkBuilder *builder, void *bg) {
 	return board;
 }
 
+/**
+ * @brief Frees the board from memory
+ * 
+ * @param board Board instance
+ */
 void board_free(Board *board) {
 	g_free(board);
 }
 
+/**
+ * @brief Initializes the board values
+ * 
+ * @param board Board instance
+ */
 void board_init(Board *board) {
 	guint i;
 
@@ -111,7 +145,7 @@ void board_init(Board *board) {
 		board->goal[i].data = 0;
 		board->prison[i] = 0;
 	}
-/*
+
 	board->places[0].data = 2;
 	board->places[5].data = -5;
 	board->places[7].data = -3;
@@ -120,20 +154,19 @@ void board_init(Board *board) {
 	board->places[16].data = 3;
 	board->places[18].data = 5;
 	board->places[23].data = -2;
-*/
-
-	board->places[3].data = -2;
-	board->places[4].data = -2;
-	board->places[20].data = 2;
-	board->places[19].data = 2;
 
 }
 
+/**
+ * @brief Resets the board by arranging the pieces according to the rules
+ * 
+ * @param board Board instance
+ */
 void board_reset(Board *board) {
 	guint i;
 	gdouble x = 1.0 - PLACE_SIZE * 2;
 
-	// Acomoda las piezas
+	// Arrange the pieces
 	for (i = 0; i < 24; i ++) {
 		board->places[i].mark = FALSE;
 
@@ -172,6 +205,11 @@ void board_reset(Board *board) {
 	board->enable_places = FALSE;
 }
 
+/**
+ * @brief Clears the triangular destination marks from all places
+ * 
+ * @param board Backgammon instance
+ */
 void board_clear_marks(Board *board) {
 	guint i;
 	for (i = 0; i < 24; i ++)
@@ -181,6 +219,11 @@ void board_clear_marks(Board *board) {
 	board->goal[1].mark = FALSE;
 }
 
+/**
+ * @brief Redraws the board
+ * 
+ * @param board Backgammon instance
+ */
 void board_redraw(Board *board) {
 	gtk_widget_queue_draw(GTK_WIDGET(board->drawing_area));
 }
