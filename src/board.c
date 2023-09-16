@@ -155,6 +155,8 @@ void board_init(Board *board) {
 	board->places[18].data = 5;
 	board->places[23].data = -2;
 
+	for (i = 0; i < 4; i ++) board->consumed_dice[i] = FALSE;
+
 }
 
 /**
