@@ -11,6 +11,29 @@
 #include <movement.h>
 
 /**
+ * @brief Returns the position of the last piece before the pieces
+ * reach the goal
+ * 
+ * @param bg Backgammon instance
+ * @return guint the position of the last piece
+ */
+guint get_index_of_last_piece(Backgammon *bg) {
+	gint i, cdir;
+	cdir = bg_current_player(bg)->direction;
+
+	if (cdir == -1) {
+		for (i = 5; i >= 0; i--) {
+			if (cdir * bg->board->places[i].data > 0) return i;
+		}
+	} else {
+		for (i = 18; i < 24; i++) {
+			if (cdir * bg->board->places[i].data > 0) return i;
+		}
+	}
+	return 0;
+}
+
+/**
  * @brief Creates a new instance of Movement
  * 
  * @param src source
@@ -68,6 +91,7 @@ GList *scan_prison_movements(Backgammon *bg) {
  * @brief Searches for possible movements for the current player
  * in the case that there is a possibility to move a piece
  * to the goal.
+ * If the piece is the last one in the race, a move less than the dice value will be allowed.
  * 
  * @param bg Backgammon instance
  * @param list current list of movements
@@ -75,16 +99,26 @@ GList *scan_prison_movements(Backgammon *bg) {
  * @param dice_value value of the dice
  * @return GList* the current list
  */
-GList *scan_goal_movement(Backgammon *bg, GList *list, guint src, guint dice_value) {
+GList *scan_goal_movement(Backgammon *bg, GList *list, gint src, gint dice_value) {
 	if (bg_current_player(bg)->direction == -1) {
 		if (src < 6) {
-			if (dice_value - src == 1)
+			if ((dice_value - src) == 1) {
 				list = g_list_append(list, movement_new(src, -1, FALSE, TRUE, dice_value));
+			} else if ((dice_value - src) > 1) {
+				if (get_index_of_last_piece(bg) <= src) {
+					list = g_list_append(list, movement_new(src, -1, FALSE, TRUE, dice_value));
+				}
+			}
 		}
 	} else {
 		if (src > 17) {
-			if (dice_value + src == 24)
+			if ((dice_value + src) == 24) {
 				list = g_list_append(list, movement_new(src, -1, FALSE, TRUE, dice_value));
+			} else if ((dice_value + src) > 24) {
+				if (get_index_of_last_piece(bg) >= src) {
+					list = g_list_append(list, movement_new(src, -1, FALSE, TRUE, dice_value));
+				}
+			}
 		}
 	}
 	return list;
@@ -92,7 +126,7 @@ GList *scan_goal_movement(Backgammon *bg, GList *list, guint src, guint dice_val
 
 /**
  * @brief Searches for possible movements for the current player.
- * Set results in board instance.
+ * Sets results in the board instance.
  * 
  * @param bg Backgammon instance
  */
@@ -118,11 +152,11 @@ void scan_movements(Backgammon *bg) {
 		return;
 	}
 
-	for (i = 0; i < 24; i ++) {
+	for (i = 0; i < 24; i++) {
 		// Check if there are pieces and if they belong to the current player
 		if (board->places[i].data * cdir <= 0) continue;
 
-		for (d = 0; d < (board->dice[0] == board->dice[1] ? 4 : 2); d ++) {
+		for (d = 0; d < (board->dice[0] == board->dice[1] ? 4 : 2); d++) {
 			if (board->consumed_dice[d]) continue;
 
 			dice_value = board->dice[d % 2];
@@ -150,11 +184,10 @@ void scan_movements(Backgammon *bg) {
 					movement_new(i, destiny, FALSE, FALSE, dice_value));
 		}
 	}
-
 }
 
 /**
- * @brief Clean current movements in Board instance.
+ * @brief Clean current movements in the Board instance.
  * 
  * @param bg Backgammon's instance.
  */
@@ -165,10 +198,10 @@ void clean_movements(Backgammon *bg) {
 }
 
 /**
- * @brief Move a game piece from any place to current player's goal
+ * @brief Move a game piece from any place to the current player's goal
  * 
  * @param bg Backgammon instance
- * @param m the register movement
+ * @param m the registered movement
  */
 void move_to_goal(Backgammon *bg, Movement *m) {
 	gint cdir, i;
@@ -177,7 +210,7 @@ void move_to_goal(Backgammon *bg, Movement *m) {
 	// Remove from source
 	bg->board->places[m->src].data -= cdir;
 
-	// Increse goal
+	// Increase goal
 	bg->board->goal[cdir == 1 ? 1 : 0].data += cdir;
 
 	// Deactivate the die according to the distance
@@ -199,7 +232,7 @@ void move_to_goal(Backgammon *bg, Movement *m) {
  * If the destination has an opponent's piece, the current player's prison captures an opponent's piece.
  * 
  * @param bg Backgammon instance
- * @param movement the register movement
+ * @param movement the registered movement
  */
 void move_piece(Backgammon *bg, Movement *m) {
 	gint i;
@@ -272,4 +305,3 @@ void move_piece(Backgammon *bg, Movement *m) {
 	// Next step
 	bg_next_step(bg);
 }
-

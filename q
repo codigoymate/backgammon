@@ -1,0 +1,173 @@
+[1mdiff --git a/src/board.c b/src/board.c[m
+[1mindex bddbbbb..84399ef 100644[m
+[1m--- a/src/board.c[m
+[1m+++ b/src/board.c[m
+[36m@@ -111,7 +111,7 @@[m [mvoid board_init(Board *board) {[m
+ 		board->goal[i].data = 0;[m
+ 		board->prison[i] = 0;[m
+ 	}[m
+[31m-[m
+[32m+[m[32m/*[m
+ 	board->places[0].data = 2;[m
+ 	board->places[5].data = -5;[m
+ 	board->places[7].data = -3;[m
+[36m@@ -120,11 +120,13 @@[m [mvoid board_init(Board *board) {[m
+ 	board->places[16].data = 3;[m
+ 	board->places[18].data = 5;[m
+ 	board->places[23].data = -2;[m
+[32m+[m[32m*/[m
+ [m
+[31m-/*[m
+[32m+[m	[32mboard->places[3].data = -2;[m
+ 	board->places[4].data = -2;[m
+ 	board->places[20].data = 2;[m
+[31m-*/[m
+[32m+[m	[32mboard->places[19].data = 2;[m
+[32m+[m
+ }[m
+ [m
+ void board_reset(Board *board) {[m
+[1mdiff --git a/src/movement.c b/src/movement.c[m
+[1mindex 0442d8e..d522ffb 100644[m
+[1m--- a/src/movement.c[m
+[1m+++ b/src/movement.c[m
+[36m@@ -10,6 +10,29 @@[m
+ [m
+ #include <movement.h>[m
+ [m
+[32m+[m[32m/**[m
+[32m+[m[32m * @brief Returns the position of the last piece before the pieces[m
+[32m+[m[32m * reach the goal[m
+[32m+[m[32m *[m[41m [m
+[32m+[m[32m * @param bg Backgammon instance[m
+[32m+[m[32m * @return guint the position of the last piece[m
+[32m+[m[32m */[m
+[32m+[m[32mguint get_index_of_last_piece(Backgammon *bg) {[m
+[32m+[m	[32mgint i, cdir;[m
+[32m+[m	[32mcdir = bg_current_player(bg)->direction;[m
+[32m+[m
+[32m+[m	[32mif (cdir == -1) {[m
+[32m+[m		[32mfor (i = 5; i >= 0; i--) {[m
+[32m+[m			[32mif (cdir * bg->board->places[i].data > 0) return i;[m
+[32m+[m		[32m}[m
+[32m+[m	[32m} else {[m
+[32m+[m		[32mfor (i = 18; i < 24; i++) {[m
+[32m+[m			[32mif (cdir * bg->board->places[i].data > 0) return i;[m
+[32m+[m		[32m}[m
+[32m+[m	[32m}[m
+[32m+[m	[32mreturn 0;[m
+[32m+[m[32m}[m
+[32m+[m
+ /**[m
+  * @brief Creates a new instance of Movement[m
+  * [m
+[36m@@ -68,6 +91,7 @@[m [mGList *scan_prison_movements(Backgammon *bg) {[m
+  * @brief Searches for possible movements for the current player[m
+  * in the case that there is a possibility to move a piece[m
+  * to the goal.[m
+[32m+[m[32m * If the piece is the last one in the race, a move less than the dice value will be allowed.[m
+  * [m
+  * @param bg Backgammon instance[m
+  * @param list current list of movements[m
+[36m@@ -75,16 +99,26 @@[m [mGList *scan_prison_movements(Backgammon *bg) {[m
+  * @param dice_value value of the dice[m
+  * @return GList* the current list[m
+  */[m
+[31m-GList *scan_goal_movement(Backgammon *bg, GList *list, guint src, guint dice_value) {[m
+[32m+[m[32mGList *scan_goal_movement(Backgammon *bg, GList *list, gint src, gint dice_value) {[m
+ 	if (bg_current_player(bg)->direction == -1) {[m
+ 		if (src < 6) {[m
+[31m-			if (dice_value - src == 1)[m
+[32m+[m			[32mif ((dice_value - src) == 1) {[m
+ 				list = g_list_append(list, movement_new(src, -1, FALSE, TRUE, dice_value));[m
+[32m+[m			[32m} else if ((dice_value - src) > 1) {[m
+[32m+[m				[32mif (get_index_of_last_piece(bg) <= src) {[m
+[32m+[m					[32mlist = g_list_append(list, movement_new(src, -1, FALSE, TRUE, dice_value));[m
+[32m+[m				[32m}[m
+[32m+[m			[32m}[m
+ 		}[m
+ 	} else {[m
+ 		if (src > 17) {[m
+[31m-			if (dice_value + src == 24)[m
+[32m+[m			[32mif ((dice_value + src) == 24) {[m
+ 				list = g_list_append(list, movement_new(src, -1, FALSE, TRUE, dice_value));[m
+[32m+[m			[32m} else if ((dice_value + src) > 24) {[m
+[32m+[m				[32mif (get_index_of_last_piece(bg) >= src) {[m
+[32m+[m					[32mlist = g_list_append(list, movement_new(src, -1, FALSE, TRUE, dice_value));[m
+[32m+[m				[32m}[m
+[32m+[m			[32m}[m
+ 		}[m
+ 	}[m
+ 	return list;[m
+[36m@@ -92,7 +126,7 @@[m [mGList *scan_goal_movement(Backgammon *bg, GList *list, guint src, guint dice_val[m
+ [m
+ /**[m
+  * @brief Searches for possible movements for the current player.[m
+[31m- * Set results in board instance.[m
+[32m+[m[32m * Sets results in the board instance.[m
+  * [m
+  * @param bg Backgammon instance[m
+  */[m
+[36m@@ -118,11 +152,11 @@[m [mvoid scan_movements(Backgammon *bg) {[m
+ 		return;[m
+ 	}[m
+ [m
+[31m-	for (i = 0; i < 24; i ++) {[m
+[32m+[m	[32mfor (i = 0; i < 24; i++) {[m
+ 		// Check if there are pieces and if they belong to the current player[m
+ 		if (board->places[i].data * cdir <= 0) continue;[m
+ [m
+[31m-		for (d = 0; d < (board->dice[0] == board->dice[1] ? 4 : 2); d ++) {[m
+[32m+[m		[32mfor (d = 0; d < (board->dice[0] == board->dice[1] ? 4 : 2); d++) {[m
+ 			if (board->consumed_dice[d]) continue;[m
+ [m
+ 			dice_value = board->dice[d % 2];[m
+[36m@@ -150,11 +184,10 @@[m [mvoid scan_movements(Backgammon *bg) {[m
+ 					movement_new(i, destiny, FALSE, FALSE, dice_value));[m
+ 		}[m
+ 	}[m
+[31m-[m
+ }[m
+ [m
+ /**[m
+[31m- * @brief Clean current movements in Board instance.[m
+[32m+[m[32m * @brief Clean current movements in the Board instance.[m
+  * [m
+  * @param bg Backgammon's instance.[m
+  */[m
+[36m@@ -165,10 +198,10 @@[m [mvoid clean_movements(Backgammon *bg) {[m
+ }[m
+ [m
+ /**[m
+[31m- * @brief Move a game piece from any place to current player's goal[m
+[32m+[m[32m * @brief Move a game piece from any place to the current player's goal[m
+  * [m
+  * @param bg Backgammon instance[m
+[31m- * @param m the register movement[m
+[32m+[m[32m * @param m the registered movement[m
+  */[m
+ void move_to_goal(Backgammon *bg, Movement *m) {[m
+ 	gint cdir, i;[m
+[36m@@ -177,7 +210,7 @@[m [mvoid move_to_goal(Backgammon *bg, Movement *m) {[m
+ 	// Remove from source[m
+ 	bg->board->places[m->src].data -= cdir;[m
+ [m
+[31m-	// Increse goal[m
+[32m+[m	[32m// Increase goal[m
+ 	bg->board->goal[cdir == 1 ? 1 : 0].data += cdir;[m
+ [m
+ 	// Deactivate the die according to the distance[m
+[36m@@ -199,7 +232,7 @@[m [mvoid move_to_goal(Backgammon *bg, Movement *m) {[m
+  * If the destination has an opponent's piece, the current player's prison captures an opponent's piece.[m
+  * [m
+  * @param bg Backgammon instance[m
+[31m- * @param movement the register movement[m
+[32m+[m[32m * @param movement the registered movement[m
+  */[m
+ void move_piece(Backgammon *bg, Movement *m) {[m
+ 	gint i;[m
+[36m@@ -272,4 +305,3 @@[m [mvoid move_piece(Backgammon *bg, Movement *m) {[m
+ 	// Next step[m
+ 	bg_next_step(bg);[m
+ }[m
+[31m-[m
