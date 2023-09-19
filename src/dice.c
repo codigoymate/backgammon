@@ -5,7 +5,14 @@ void dice_roll(guint dice[], gboolean consumed[]) {
 
 	for (i = 0; i < 4; i ++) consumed[i] = FALSE;
 	for (i = 0; i < 2; i ++) dice[i] = g_random_int_range(1, 7);
-	//dice[0] = dice[1] = g_random_int_range(1, 7);
+	
+#ifdef BG_DEBUG
+	g_print("Roll: ");
+	for (i = 0; i < (dice[0] == dice[1] ? 4 : 2); i ++) {
+		g_print("%i ", dice[i % 2]);
+	}
+	g_print("\n");
+#endif
 }
 
 void draw_rounded_rectangle(cairo_t *cr, gdouble x, gdouble y,
