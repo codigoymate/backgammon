@@ -14,6 +14,89 @@
 #include <dice.h>
 
 /**
+ * @brief Update player information:
+ * name, step count, and score
+ * 
+ * @param bg Backgammon instance
+ * @param player player instance
+ */
+void player_update(void *bgp) {
+	Backgammon *bg = (Backgammon *) bgp;
+	gchar *number;
+	Player *player1;
+	Player *player2;
+
+	if (bg->player[0].direction == -1) {
+		player1 = &bg->player[0];
+		player2 = &bg->player[1];
+	} else {
+		player1 = &bg->player[1];
+		player2 = &bg->player[0];
+	}
+
+	// Player name
+	gtk_label_set_text(bg->player_name_label[0], player1->name->str);
+	gtk_label_set_text(bg->player_name_label[1], player2->name->str);
+
+	// Steps
+	number = g_strdup_printf("%i pasos", player_count_steps(bg, player1));
+	gtk_label_set_text(bg->steps_label[0], number);
+	g_free(number);
+	number = g_strdup_printf("%i pasos", player_count_steps(bg, player2));
+	gtk_label_set_text(bg->steps_label[1], number);
+	g_free(number);
+
+	// Score
+	number = g_strdup_printf("%i puntos", player1->score);
+	gtk_label_set_text(bg->score_label[0], number);
+	g_free(number);
+	number = g_strdup_printf("%i puntos", player2->score);
+	gtk_label_set_text(bg->score_label[1], number);
+	g_free(number);
+}
+
+/**
+ * @brief Counts the number of steps the player needs to win
+ * 
+ * @param bg Instance of Backgammon
+ * @param player Target player
+ * @return guint number of remaining steps to win
+ */
+guint player_count_steps(void *bgp, Player *player) {
+	Backgammon *bg;
+	gint i, j, sum, val;
+	bg = (Backgammon *) bgp;
+
+	sum = 0;
+
+	// Prison
+	val = bg->board->prison[player->direction == -1 ? 1 : 0];
+	if (val < 0) val *= -1;
+	sum += val * 24;
+
+	if (player->direction == -1) {
+		for (i = 0; i < 24; i ++) {
+			val = bg->board->places[i].data;
+			if (val * player->direction < 0) continue;
+
+			if (val < 0) val *= -1;
+			sum += val * (i + 1);
+		}
+	} else {
+		i = 0;
+		for (j = 23; j >= 0; j --) {
+			val = bg->board->places[j].data;
+			if (val * player->direction < 0) { i ++; continue; }
+
+			if (val < 0) val *= -1;
+			sum += val * (i + 1);
+			i ++;
+		}
+	}
+	return sum;
+}
+
+/**
  * @brief Function assigned to a player to configure them as a human player.
  * 
  * @param bgp Backgammon instance

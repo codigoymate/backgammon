@@ -21,10 +21,26 @@
  */
 typedef struct player_t {
 	GString *name;
-	gint piece;
-	gint direction;
+	gint piece, direction, score;
 	void (*play_func)(void *);
 } Player;
+
+/**
+ * @brief Update players information:
+ * name, step count, and score
+ * 
+ * @param bg Backgammon instance
+ */
+void player_update(void *bg);
+
+/**
+ * @brief Counts the number of steps the player needs to win
+ * 
+ * @param bg Instance of Backgammon
+ * @param player Target player
+ * @return guint number of remaining steps to win
+ */
+guint player_count_steps(void *bg, Player *player);
 
 /**
  * @brief Function assigned to a player to configure them as a human player.

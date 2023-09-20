@@ -103,6 +103,16 @@ Backgammon *bg_new(int argc, char *argv[]) {
 	bg->end_turn_button = GTK_BUTTON(gtk_builder_get_object(builder, "end-turn-button"));
 	gtk_widget_set_sensitive(GTK_WIDGET(bg->end_turn_button), FALSE);
 
+	// Players information
+	bg->player_name_label[0] = GTK_LABEL(gtk_builder_get_object(builder, "pl1-name-label"));
+	bg->player_name_label[1] = GTK_LABEL(gtk_builder_get_object(builder, "pl2-name-label"));
+
+	bg->steps_label[0] = GTK_LABEL(gtk_builder_get_object(builder, "pl1-steps-label"));
+	bg->steps_label[1] = GTK_LABEL(gtk_builder_get_object(builder, "pl2-steps-label"));
+
+	bg->score_label[0] = GTK_LABEL(gtk_builder_get_object(builder, "pl1-score-label"));
+	bg->score_label[1] = GTK_LABEL(gtk_builder_get_object(builder, "pl2-score-label"));
+
 	g_signal_connect(
 		gtk_builder_get_object(builder, "new-game-menu-item"),
 		"activate",
@@ -163,10 +173,13 @@ void bg_free(Backgammon *bg) {
  * @param bg Backgammon instance
  */
 void bg_next_step(Backgammon *bg) {
+
 	if (bg->status == S_NOT_PLAYING) {
 		bg->player_turn = -1;
 		bg_next_turn(bg);
 	}
+
+	player_update(bg);
 
 	bg_current_player(bg)->play_func(bg);
 }

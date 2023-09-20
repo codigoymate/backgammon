@@ -146,6 +146,11 @@ static void new_dialog_start_button_clicked(GtkWidget *widget, gpointer data) {
 		bg->player[1].direction = -1;
 	}
 
+	// Misc:
+	for (index = 0; index < 2; index ++) {
+		bg->player[index].score = 0;
+	}
+
 	bg->status = S_NOT_PLAYING;
 	board_init(bg->board);
 	bg_next_step(bg);
