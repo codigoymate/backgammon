@@ -1,5 +1,23 @@
+/**
+ * @file draw.c
+ * @author Javier Candales (javier_candales@yahoo.com.ar)
+ * @brief Implementation of draw.h
+ * @date 2023-09-20
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
 #include <draw.h>
 
+/**
+ * @brief Draws a generic triangle at the specified place.
+ * The orientation depends on the place index on the board.
+ * 
+ * @param cr Cairo context
+ * @param place The place representing the triangle
+ * @param w Width of the drawing area
+ * @param h Height of the drawing area
+ */
 void draw_triangle(cairo_t *cr, Place place, gint w, gint h) {
 
 	gint ybase, ytop;
@@ -13,6 +31,16 @@ void draw_triangle(cairo_t *cr, Place place, gint w, gint h) {
 	cairo_close_path(cr);
 }
 
+/**
+ * @brief Draws a triangle of a specific color.
+ * The orientation depends on the place index on the board.
+ * 
+ * @param cr Cairo context
+ * @param place The place representing the triangle
+ * @param color The color of the triangle
+ * @param w Width of the drawing area
+ * @param h Height of the drawing area
+ */
 void draw_colored_triangle(cairo_t *cr, Place place, guchar color,
 			gint w, gint h) {
 	if (color) {COLOR_TRIANGLE_1_FACE(cr);}
@@ -29,6 +57,16 @@ void draw_colored_triangle(cairo_t *cr, Place place, guchar color,
 	
 }
 
+/**
+ * @brief Draws a piece of a specific color at the given coordinates x and y.
+ * 
+ * @param cr Cairo context
+ * @param x x-coordinate
+ * @param y y-coordinate
+ * @param color The color of the piece
+ * @param w Width of the drawing area
+ * @param h Height of the drawing area
+ */
 void draw_piece(cairo_t *cr, gdouble x, gdouble y, gint color, gint w, gint h) {
 
 	if (color == BLACK) {COLOR_PIECE_BLACK_FACE(cr);}
@@ -45,6 +83,15 @@ void draw_piece(cairo_t *cr, gdouble x, gdouble y, gint color, gint w, gint h) {
 	cairo_stroke(cr);
 }
 
+/**
+ * @brief Draws the set of pieces at the specific place.
+ * 
+ * @param cr Cairo context
+ * @param bg Backgammon instance
+ * @param place The place where the pieces are located
+ * @param w Width of the drawing area
+ * @param h Height of the drawing area
+ */
 void draw_piece_group(cairo_t *cr, Backgammon *bg, Place place, gint w, gint h) {
 	gdouble y;
 	guint count, p;
@@ -76,6 +123,14 @@ void draw_piece_group(cairo_t *cr, Backgammon *bg, Place place, gint w, gint h) 
     cairo_show_text(cr, text);
 }
 
+/**
+ * @brief Draws a destination mark at a specific place.
+ * 
+ * @param cr Cairo context
+ * @param place The destination place for the mark
+ * @param w Width
+ * @param h Height
+ */
 void draw_mark(cairo_t *cr, Place place, gint w, gint h) {
 	gdouble ybase, ytop;
 	if (place.mark) {
@@ -92,6 +147,15 @@ void draw_mark(cairo_t *cr, Place place, gint w, gint h) {
 	}
 }
 
+/**
+ * @brief Draws the pieces in a prison.
+ * 
+ * @param cr Cairo context
+ * @param bg Backgammon instance
+ * @param prison The prison to be drawn
+ * @param w Width of the drawing area
+ * @param h Height of the drawing area
+ */
 void draw_prison(cairo_t *cr, Backgammon *bg, gint prison, gint w, gint h) {
 	gdouble y;
 	gint count;
@@ -105,7 +169,6 @@ void draw_prison(cairo_t *cr, Backgammon *bg, gint prison, gint w, gint h) {
 
 	y = prison ?  0.4 : 0.15;
 	draw_piece(cr, PLACE_SIZE * 7 - PLACE_SIZE / 2, y,
-			//board->prison[prison],
 			bg_player_by_data(bg, board->prison[prison])->piece,
 			w, h);
 
@@ -126,6 +189,15 @@ void draw_prison(cairo_t *cr, Backgammon *bg, gint prison, gint w, gint h) {
     cairo_show_text(cr, text);
 }
 
+/**
+ * @brief Draws the pieces in the goal area.
+ * 
+ * @param cr Cairo context
+ * @param bg Backgammon instance
+ * @param goal The goal area to be drawn
+ * @param w Width of the drawing area
+ * @param h Height of the drawing area
+ */
 void draw_goal(cairo_t *cr, Backgammon *bg, gint goal, gint w, gint h) {
 	gdouble y, x;
 	gint count;
@@ -161,5 +233,4 @@ void draw_goal(cairo_t *cr, Backgammon *bg, gint goal, gint w, gint h) {
 
 		cairo_stroke(cr);
 	}
-	
 }
