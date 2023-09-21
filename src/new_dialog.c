@@ -123,12 +123,22 @@ static void new_dialog_start_button_clicked(GtkWidget *widget, gpointer data) {
 	);
 
 	index = gtk_combo_box_get_active(GTK_COMBO_BOX(dialog->pl1_combo));
-	if (index == 0) bg->player[0].play_func = human_play_func;
-	else bg->player[0].play_func = ia_play_func;
+	if (index == 0) {
+		bg->player[0].play_func = human_play_func;
+		bg->player[0].ia = FALSE;
+	} else {
+		bg->player[0].play_func = ia_play_func;
+		bg->player[0].ia = TRUE;
+	}
 
 	index = gtk_combo_box_get_active(GTK_COMBO_BOX(dialog->pl2_combo));
-	if (index == 0) bg->player[1].play_func = human_play_func;
-	else bg->player[1].play_func = ia_play_func;
+	if (index == 0) {
+		bg->player[1].play_func = human_play_func;
+		bg->player[1].ia = FALSE;
+	} else {
+		bg->player[1].play_func = ia_play_func;
+		bg->player[1].ia = TRUE;
+	}
 
 	if (dialog->white) {
 		bg->player[0].piece = WHITE;

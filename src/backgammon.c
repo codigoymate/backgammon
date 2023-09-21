@@ -56,6 +56,8 @@ static void end_turn_button_clicked(GtkWidget *button, gpointer data) {
 	Backgammon *bg;
 	bg = (Backgammon *)data;
 
+	gtk_widget_set_sensitive(GTK_WIDGET(bg->end_turn_button), FALSE);
+
 	bg_next_turn(bg);
 	bg_next_step(bg);
 }
@@ -181,7 +183,9 @@ void bg_next_step(Backgammon *bg) {
 
 	player_update(bg);
 
-	bg_current_player(bg)->play_func(bg);
+	if (bg_current_player(bg)->ia) {
+		g_timeout_add(2000, ia_delayed_func, bg);
+	} else bg_current_player(bg)->play_func(bg);
 }
 
 /**
@@ -243,25 +247,6 @@ Player *bg_player_by_data(Backgammon *bg, gint data) {
 
 	return bg_opponent(bg);
 }
-
-/**
- * @brief Indicates if the current player can make a move.
- * 
- * @param bg Backgammon instance
- * @return gboolean true if the player can move
- */
-/*gboolean bg_player_can_move(Backgammon *bg) {
-	gint i;
-	Board *b;
-
-	b = bg->board;
-
-	for (i = 0; i < (b->dice[0] == b->dice[1] ? 4 : 2); i++) {
-		if (!b->consumed_dice[i]) return TRUE;
-	}
-
-	return FALSE;
-}*/
 
 /**
  * @brief Checks if all the pieces of the current player are in their territory.

@@ -159,8 +159,9 @@ void ia_play_func(void *bgp) {
 		bg->status = S_MOVE_PIECES;
 
 		board_redraw(bg->board);
-	}
-	if (bg->status == S_MOVE_PIECES) {
+		//g_timeout_add(2000, ia_delayed_func, bg);
+		bg_next_step(bg);
+	} else if (bg->status == S_MOVE_PIECES) {
 
 		// Scan possible movements
 		scan_movements(bg);
@@ -183,15 +184,22 @@ void ia_play_func(void *bgp) {
 				if (choice == i) {
 					move_piece(bg, (Movement *) iter->data);
 					board_redraw(bg->board);
-					ia_play_func(bg);
 					break;
 				}
 				i ++;
 			}
 		}
-	}
-	if (bg->status == S_END_TURN) {
+		bg_next_step(bg);
+	} else if (bg->status == S_END_TURN) {
 		gtk_label_set_text(bg->action_label, "Turno finalizado");
 		gtk_widget_set_sensitive(GTK_WIDGET(bg->end_turn_button), TRUE);
 	}
+}
+
+gboolean ia_delayed_func(gpointer data) {
+	Backgammon *bg = (Backgammon *) data;
+
+	bg_current_player(bg)->play_func(bg);
+
+	return G_SOURCE_REMOVE;
 }

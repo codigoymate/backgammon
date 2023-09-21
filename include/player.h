@@ -23,6 +23,7 @@ typedef struct player_t {
 	GString *name;
 	gint piece, direction, score;
 	void (*play_func)(void *);
+	gboolean ia;
 } Player;
 
 /**
@@ -55,5 +56,7 @@ void human_play_func(void *bg);
  * @param bg Backgammon instance
  */
 void ia_play_func(void *bg);
+
+gboolean ia_delayed_func(gpointer data);
 
 #endif
