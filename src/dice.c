@@ -1,5 +1,21 @@
+/**
+ * @file dice.c
+ * @author Javier Candales (javier_candales@yahoo.com.ar)
+ * @brief Implementation of dice.h
+ * @date 2023-09-23
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
 #include <dice.h>
 
+/**
+ * @brief Chooses random values for dice[0] and dice[1].
+ * Sets all 4 consumed dice flags to False.
+ * 
+ * @param dice Set of dice
+ * @param consumed Dice consumption flags
+ */
 void dice_roll(guint dice[], gboolean consumed[]) {
 	guint i;
 
@@ -15,6 +31,16 @@ void dice_roll(guint dice[], gboolean consumed[]) {
 #endif
 }
 
+/**
+ * @brief Draws a rounded rectangle.
+ * 
+ * @param cr Cairo context
+ * @param x X coordinate
+ * @param y Y coordinate
+ * @param width Rectangle width
+ * @param height Rectangle height
+ * @param radius Radius of rounded corners
+ */
 void draw_rounded_rectangle(cairo_t *cr, gdouble x, gdouble y,
 			gdouble width, gdouble height, gdouble radius) {
 
@@ -26,6 +52,16 @@ void draw_rounded_rectangle(cairo_t *cr, gdouble x, gdouble y,
     cairo_close_path(cr);
 }
 
+/**
+ * @brief Draws a single die.
+ * 
+ * @param cr Cairo context
+ * @param value Die value
+ * @param x X coordinate
+ * @param y Y coordinate
+ * @param w Drawing area width
+ * @param h Drawing area height
+ */
 void dice_draw_single(cairo_t *cr, guint value, gdouble x, gdouble y, gint w, gint h) {
 	COLOR_DICE_FACE(cr);
 	draw_rounded_rectangle(cr, x * w, y * h, DICE_SIZE * w, DICE_SIZE * w, DICE_SIZE * w * 0.18);
@@ -67,6 +103,17 @@ void dice_draw_single(cairo_t *cr, guint value, gdouble x, gdouble y, gint w, gi
 	
 }
 
+/**
+ * @brief Draws the dice.
+ * Draws 2 dice when values are different and 4 when they are the same.
+ * Draws grayed-out dice when they are consumed.
+ * 
+ * @param cr Cairo context
+ * @param dice Set of dice
+ * @param consumed Dice consumption flags
+ * @param w Drawing area width
+ * @param h Drawing area height
+ */
 void dice_draw(cairo_t *cr, guint dice[], gboolean consumed[], gint w, gint h) {
 	guint i;
 	gdouble x = 0.6;

@@ -159,7 +159,7 @@ void ia_play_func(void *bgp) {
 		bg->status = S_MOVE_PIECES;
 
 		board_redraw(bg->board);
-		//g_timeout_add(2000, ia_delayed_func, bg);
+		
 		bg_next_step(bg);
 	} else if (bg->status == S_MOVE_PIECES) {
 

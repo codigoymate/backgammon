@@ -96,14 +96,6 @@ Player *bg_opponent(Backgammon *bg);
 Player *bg_player_by_data(Backgammon *bg, gint data);
 
 /**
- * @brief Indicates if the current player can make a move.
- * 
- * @param bg Backgammon instance
- * @return gboolean true if the player can move
- */
-//gboolean bg_player_can_move(Backgammon *bg);
-
-/**
  * @brief Checks if all the pieces of the current player are in their territory.
  * 
  * @param bg Backgammon instance

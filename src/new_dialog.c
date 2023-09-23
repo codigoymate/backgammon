@@ -47,7 +47,6 @@ void update_piece(NewDialog *dialog) {
  */
 void new_dialog_free(NewDialog *dialog) {
 	gtk_widget_destroy(GTK_WIDGET(dialog->window));
-	//g_free(dialog);
 }
 
 /**

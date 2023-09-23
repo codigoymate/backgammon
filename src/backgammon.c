@@ -9,7 +9,6 @@
  */
 
 #include <backgammon.h>
-//#include <utils.h>
 
 #include <player.h>
 
