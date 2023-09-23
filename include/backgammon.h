@@ -19,6 +19,8 @@
 #define S_MOVE_PIECES	2
 #define S_END_TURN		3
 
+#define DELAYED_FUNC_TIMEOUT		1000
+
 #include <gtk/gtk.h>
 #include <board.h>
 #include <player.h>

@@ -208,7 +208,7 @@ void draw_goal(cairo_t *cr, Backgammon *bg, gint goal, gint w, gint h) {
 	if (!board->goal[goal].data) return ;
 
 	y = goal ?  0.535 : 0.0;
-	x = w * PLACE_SIZE * 13;
+	x = w * PLACE_SIZE * 13 + w * PLACE_SIZE / 2 - w * PIECE_SIZE / 2;
 
 	piece = bg_player_by_data(bg, board->goal[goal].data)->piece;
 	count = board->goal[goal].data;

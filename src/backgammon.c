@@ -183,7 +183,7 @@ void bg_next_step(Backgammon *bg) {
 	player_update(bg);
 
 	if (bg_current_player(bg)->ia) {
-		g_timeout_add(2000, ia_delayed_func, bg);
+		g_timeout_add(DELAYED_FUNC_TIMEOUT, ia_delayed_func, bg);
 	} else bg_current_player(bg)->play_func(bg);
 }
 
