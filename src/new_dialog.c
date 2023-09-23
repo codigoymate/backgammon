@@ -155,6 +155,13 @@ static void new_dialog_start_button_clicked(GtkWidget *widget, gpointer data) {
 		bg->player[1].direction = -1;
 	}
 
+	// Max score
+	bg->max_score = (gint)gtk_adjustment_get_value(dialog->score_adj);
+
+#ifdef BG_DEBUG
+	g_print("Max score: %u\n", bg->max_score);
+#endif
+
 	// Misc:
 	for (index = 0; index < 2; index ++) {
 		bg->player[index].score = 0;
@@ -210,6 +217,9 @@ NewDialog *new_dialog_new(Backgammon *bg) {
 
 	dialog->clockwise_image = GTK_IMAGE(gtk_builder_get_object(builder, "clockwise-image"));
 	dialog->piece_image = GTK_IMAGE(gtk_builder_get_object(builder, "piece-image"));
+
+	dialog->score_adj = GTK_ADJUSTMENT(gtk_builder_get_object(builder, "score_adj"));
+	gtk_adjustment_set_value(dialog->score_adj, bg->max_score);
 
 	g_signal_connect(
 		GTK_BUTTON(gtk_builder_get_object(builder, "start-button")),

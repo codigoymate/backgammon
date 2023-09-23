@@ -23,6 +23,7 @@ typedef struct new_dialog_t {
 	GtkComboBoxText *pl1_combo, *pl2_combo;
 	GtkButton *clockwise_button, *piece_button;
 	GtkImage *clockwise_image, *piece_image;
+	GtkAdjustment *score_adj;
 	Backgammon *bg;
 	gboolean clockwise, white;
 } NewDialog;

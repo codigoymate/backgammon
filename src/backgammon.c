@@ -20,6 +20,9 @@
  */
 void bg_free(Backgammon *bg);
 
+gboolean bg_check_end_game(Backgammon *bg);
+void bg_end_game(Backgammon *bg);
+
 /**
  * @brief Occurs when the main window is closed.
  * Frees the Backgammon instance.
@@ -82,6 +85,8 @@ Backgammon *bg_new(int argc, char *argv[]) {
 
 	bg->player[0].name = g_string_new(g_getenv("USER"));
 	bg->player[1].name = randomize_name();
+
+	bg->max_score = 15;
 
 	gtk_init(&argc, &argv);
 
@@ -184,6 +189,11 @@ void bg_next_step(Backgammon *bg) {
 
 	player_update(bg);
 
+	if (bg_check_end_game(bg)) {
+		bg_end_game(bg);
+		return ;
+	}
+
 	if (bg_current_player(bg)->ia) {
 		g_timeout_add(DELAYED_FUNC_TIMEOUT, ia_delayed_func, bg);
 	} else bg_current_player(bg)->play_func(bg);
@@ -276,4 +286,27 @@ gboolean bg_all_pieces_in_territory(Backgammon *bg) {
 	}
 
 	return TRUE;
+}
+
+gboolean bg_check_end_game(Backgammon *bg) {
+	return bg->board->goal[0].data == 15 || bg->board->goal[0].data == -15 ||
+			bg->board->goal[1].data == 15 || bg->board->goal[1].data == -15;
+}
+
+void bg_end_game(Backgammon *bg) {
+	Player *winner;
+
+	if (bg->board->goal[0].data == -15 || bg->board->goal[0].data == 15) {
+		winner = bg->player[0].direction == -1 ?
+					&bg->player[0] : &bg->player[1];
+	} else {
+		winner = bg->player[0].direction == 1 ?
+					&bg->player[0] : &bg->player[1];
+	}
+
+#ifdef BG_DEBUG
+	g_print("Winner: %s\n\n", winner->name->str);
+#endif
+
+	bg->status = S_NOT_PLAYING;
 }

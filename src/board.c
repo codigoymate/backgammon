@@ -146,6 +146,10 @@ void board_init(Board *board) {
 		board->prison[i] = 0;
 	}
 
+	// Test:
+	board->goal[0].data = -13;
+	board->goal[1].data = 13;
+
 	/*board->places[0].data = 2;
 	board->places[5].data = -5;
 	board->places[7].data = -3;

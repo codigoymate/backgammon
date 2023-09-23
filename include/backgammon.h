@@ -37,7 +37,7 @@ typedef struct backgammon_t {
 				*steps_label[2],
 				*score_label[2];
 	Board *board;
-	gint player_turn, status;
+	gint player_turn, status, max_score;
 	Player player[2];
 } Backgammon;
 
