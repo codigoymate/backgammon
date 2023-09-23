@@ -25,3 +25,31 @@ gboolean question(GtkWidget *parent, const char *msg) {
 
 	return result;
 }
+
+GString *randomize_name(void) {
+    gchar *file_contents = NULL, **lines, **line;
+    gsize file_length = 0;
+	guint i = 0, chosen;
+	GString *result;
+
+    if (g_file_get_contents("ui/names", &file_contents, &file_length, NULL)) {
+        lines = g_strsplit(file_contents, "\n", -1);
+
+		chosen = g_random_int_range(0, 50);
+
+        for (line = lines; *line; line ++) {
+            if (i == chosen) {
+				result = g_string_new(*line);
+				break;
+			}
+			i ++;
+        }
+
+        g_strfreev(lines);
+        g_free(file_contents);
+    } else {
+        g_print("ERROR: Cannot read names file.\n");
+    }
+
+    return result;
+}

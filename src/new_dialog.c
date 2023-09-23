@@ -194,6 +194,9 @@ NewDialog *new_dialog_new(Backgammon *bg) {
 	dialog->pl1_entry = GTK_ENTRY(gtk_builder_get_object(builder, "pl1_entry"));
 	dialog->pl2_entry = GTK_ENTRY(gtk_builder_get_object(builder, "pl2_entry"));
 
+	gtk_entry_set_text(dialog->pl1_entry, bg->player[0].name->str);
+	gtk_entry_set_text(dialog->pl2_entry, bg->player[1].name->str);
+
 	dialog->pl1_combo = GTK_COMBO_BOX_TEXT(gtk_builder_get_object(builder, "pl1_combo"));
 	dialog->pl2_combo = GTK_COMBO_BOX_TEXT(gtk_builder_get_object(builder, "pl2_combo"));
 

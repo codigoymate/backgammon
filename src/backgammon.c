@@ -9,10 +9,9 @@
  */
 
 #include <backgammon.h>
-
 #include <player.h>
-
 #include <new_dialog.h>
+#include <utils.h>
 
 /**
  * @brief Frees the Backgammon instance.
@@ -78,8 +77,11 @@ Backgammon *bg_new(int argc, char *argv[]) {
 	GdkScreen *screen;
 
 	bg = (Backgammon *)g_malloc(sizeof(Backgammon));
-	bg->player[0].name = g_string_new("");
-	bg->player[1].name = g_string_new("");
+
+	// Dafault names
+
+	bg->player[0].name = g_string_new(g_getenv("USER"));
+	bg->player[1].name = randomize_name();
 
 	gtk_init(&argc, &argv);
 

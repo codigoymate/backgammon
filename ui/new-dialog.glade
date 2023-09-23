@@ -52,7 +52,6 @@
               <object class="GtkEntry" id="pl1_entry">
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
-                <property name="text" translatable="yes">Javier</property>
               </object>
               <packing>
                 <property name="left-attach">0</property>
@@ -75,7 +74,6 @@
               <object class="GtkEntry" id="pl2_entry">
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
-                <property name="text" translatable="yes">ewfser</property>
               </object>
               <packing>
                 <property name="left-attach">2</property>

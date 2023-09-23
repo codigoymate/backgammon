@@ -5,4 +5,6 @@
 
 gboolean question(GtkWidget *parent, const char *msg);
 
+GString *randomize_name(void);
+
 #endif
