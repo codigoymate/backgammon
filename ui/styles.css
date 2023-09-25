@@ -5,3 +5,11 @@ label {
 .player-turn {
 	font-size: 1.6em;
 }
+
+.winner-result {
+	font-size: 1.5em;
+}
+
+.player-result {
+	font-size: 2em;
+}

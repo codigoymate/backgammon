@@ -12,6 +12,7 @@
 #include <player.h>
 #include <new_dialog.h>
 #include <utils.h>
+#include <results_dialog.h>
 
 /**
  * @brief Frees the Backgammon instance.
@@ -22,6 +23,7 @@ void bg_free(Backgammon *bg);
 
 gboolean bg_check_end_game(Backgammon *bg);
 void bg_end_game(Backgammon *bg);
+guint get_winner_points(Backgammon *bg, gint win_dir);
 
 /**
  * @brief Occurs when the main window is closed.
@@ -295,6 +297,8 @@ gboolean bg_check_end_game(Backgammon *bg) {
 
 void bg_end_game(Backgammon *bg) {
 	Player *winner;
+	guint score;
+	ResultsDialog *dialog;
 
 	if (bg->board->goal[0].data == -15 || bg->board->goal[0].data == 15) {
 		winner = bg->player[0].direction == -1 ?
@@ -304,9 +308,48 @@ void bg_end_game(Backgammon *bg) {
 					&bg->player[0] : &bg->player[1];
 	}
 
+	score = get_winner_points(bg, winner->direction);
+	winner->score += score;
+
 #ifdef BG_DEBUG
-	g_print("Winner: %s\n\n", winner->name->str);
+	g_print("Winner: %s\n", winner->name->str);
+	g_print("Score: %u\n\n", score);
 #endif
 
+	dialog = results_dialog_new(bg, winner, score);
+	results_dialog_show(dialog);
+
 	bg->status = S_NOT_PLAYING;
+}
+
+guint get_winner_points(Backgammon *bg, gint win_dir) {
+	Board *b;
+	guint points, i;
+	b = bg->board;
+
+	points = 1;
+
+	// Check Gammon
+	if (win_dir == -1) {
+		if (b->goal[1].data) return points;
+	} else {
+		if (b->goal[0].data) return points;
+	}
+
+	points ++;
+
+	// Check backgammon
+	if (win_dir == -1) {
+		if (b->prison[0]) return points + 1;
+		for (i = 0; i < 6; i ++) {
+			if (b->places[i].data * win_dir < 0) return points + 1;
+		}
+	} else {
+		if (b->prison[1]) return points + 1;
+		for (i = 18; i < 24; i ++) {
+			if (b->places[i].data * win_dir < 0) return points + 1;
+		}
+	}
+
+	return points;
 }
