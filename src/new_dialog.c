@@ -103,6 +103,9 @@ static void new_dialog_start_button_clicked(GtkWidget *widget, gpointer data) {
 	Backgammon *bg;
 	gint index;
 
+	GtkStyleContext *context0, *context1;
+	
+
 	dialog = (NewDialog *) data;
 	bg = dialog->bg;
 
@@ -112,7 +115,6 @@ static void new_dialog_start_button_clicked(GtkWidget *widget, gpointer data) {
 			return;
 		}
 	}
-
 
 	bg->player[0].name = g_string_assign(bg->player[0].name,
 		gtk_entry_get_text(dialog->pl1_entry)
@@ -139,20 +141,33 @@ static void new_dialog_start_button_clicked(GtkWidget *widget, gpointer data) {
 		bg->player[1].ia = TRUE;
 	}
 
-	if (dialog->white) {
-		bg->player[0].piece = WHITE;
-		bg->player[1].piece = BLACK;
-	} else {
-		bg->player[0].piece = BLACK;
-		bg->player[1].piece = WHITE;
-	}
-
 	if (dialog->clockwise) {
 		bg->player[0].direction = -1;
 		bg->player[1].direction = 1;
 	} else {
 		bg->player[0].direction = 1;
 		bg->player[1].direction = -1;
+	}
+
+	context0 = gtk_widget_get_style_context(GTK_WIDGET(
+		bg->player_name_label[
+			bg->player[0].direction == -1 ? 0 : 1
+		]));
+	context1 = gtk_widget_get_style_context(GTK_WIDGET(
+		bg->player_name_label[
+			bg->player[0].direction == -1 ? 1 : 0
+		]));
+
+	if (dialog->white) {
+		bg->player[0].piece = WHITE;
+		bg->player[1].piece = BLACK;
+		gtk_style_context_add_class(context0, "white-label");
+		gtk_style_context_add_class(context1, "black-label");
+	} else {
+		bg->player[0].piece = BLACK;
+		bg->player[1].piece = WHITE;
+		gtk_style_context_add_class(context1, "white-label");
+		gtk_style_context_add_class(context0, "black-label");
 	}
 
 	// Max score

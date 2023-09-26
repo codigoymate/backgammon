@@ -2,6 +2,18 @@ label {
 	font-size: 1.2em;
 }
 
+.black-label {
+	background-color: black;
+	color: white;
+	font-size: 1.6em;
+}
+
+.white-label {
+	background-color: white;
+	color: black;
+	font-size: 1.6em;
+}
+
 .player-turn {
 	font-size: 1.6em;
 }
