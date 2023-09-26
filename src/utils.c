@@ -35,7 +35,7 @@ GString *randomize_name(void) {
     if (g_file_get_contents("ui/names", &file_contents, &file_length, NULL)) {
         lines = g_strsplit(file_contents, "\n", -1);
 
-		chosen = g_random_int_range(0, 50);
+		chosen = g_random_int_range(0, 100);
 
         for (line = lines; *line; line ++) {
             if (i == chosen) {
