@@ -1,7 +1,19 @@
 #include <results_dialog.h>
 
-static void result_dialog_ok_clicked(GtkButton *button, gpointer data) {
+void result_dialog_free(ResultsDialog *dialog) {
+	g_free(dialog);
+}
 
+static void result_dialog_destroy(GtkWindow *window, gpointer data) {
+	ResultsDialog *dialog;
+	dialog = (ResultsDialog *) data;
+	result_dialog_free(dialog);
+}
+
+static void result_dialog_ok_clicked(GtkButton *button, gpointer data) {
+	ResultsDialog *dialog;
+	dialog = (ResultsDialog *) data;
+	gtk_widget_destroy(GTK_WIDGET(dialog->window)); 
 }
 
 ResultsDialog *results_dialog_new(Backgammon *bg, Player *winner, guint winner_score) {
@@ -41,6 +53,8 @@ ResultsDialog *results_dialog_new(Backgammon *bg, Player *winner, guint winner_s
 
 	dialog->ok_button = GTK_BUTTON(gtk_builder_get_object(builder, "ok-button"));
 	g_signal_connect(dialog->ok_button, "clicked", G_CALLBACK(result_dialog_ok_clicked), dialog);
+
+	g_signal_connect(dialog->window, "destroy", G_CALLBACK(result_dialog_destroy), dialog);
 
 	g_object_unref(builder);
 

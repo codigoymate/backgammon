@@ -46,7 +46,7 @@ void update_piece(NewDialog *dialog) {
  * @param dialog NewDialog instance
  */
 void new_dialog_free(NewDialog *dialog) {
-	gtk_widget_destroy(GTK_WIDGET(dialog->window));
+	g_free(dialog);
 }
 
 /**
@@ -188,7 +188,7 @@ static void new_dialog_start_button_clicked(GtkWidget *widget, gpointer data) {
 
 	board_redraw(bg->board);
 
-	new_dialog_free((NewDialog *) data);
+	gtk_widget_destroy(GTK_WIDGET(dialog->window));
 }
 
 /**
