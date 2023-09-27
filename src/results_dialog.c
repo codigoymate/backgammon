@@ -1,15 +1,42 @@
+/**
+ * @file results_dialog.c
+ * @brief Implementation of results_dialog.h
+ * @date 2023-09-27
+ * 
+ * @author Javier Candales
+ * @copyright Copyright (c) 2023
+ * 
+ */
+
 #include <results_dialog.h>
 
+/**
+ * @brief Frees the ResultDialog from memory.
+ * 
+ * @param dialog Instance of ResultDialog
+ */
 void result_dialog_free(ResultsDialog *dialog) {
 	g_free(dialog);
 }
 
+/**
+ * @brief Occurs when the window is closed.
+ * 
+ * @param window Window instance
+ * @param data Instance of ResultDialog
+ */
 static void result_dialog_destroy(GtkWindow *window, gpointer data) {
 	ResultsDialog *dialog;
 	dialog = (ResultsDialog *) data;
 	result_dialog_free(dialog);
 }
 
+/**
+ * @brief Occurs when the OK button is clicked.
+ * 
+ * @param button Button instance
+ * @param data Instance of ResultDialog
+ */
 static void result_dialog_ok_clicked(GtkButton *button, gpointer data) {
 	ResultsDialog *dialog;
 	dialog = (ResultsDialog *) data;
@@ -22,6 +49,14 @@ static void result_dialog_ok_clicked(GtkButton *button, gpointer data) {
 	board_redraw(dialog->bg->board);
 }
 
+/**
+ * @brief Creates a new instance of "ResultDialog."
+ * 
+ * @param bg Instance of Backgammon
+ * @param winner Instance of the winning player
+ * @param winner_score Score obtained by the winning player
+ * @return ResultsDialog* ResultDialog instance
+ */
 ResultsDialog *results_dialog_new(Backgammon *bg, Player *winner, guint winner_score) {
 	ResultsDialog *dialog;
 	GtkBuilder *builder;
@@ -69,6 +104,11 @@ ResultsDialog *results_dialog_new(Backgammon *bg, Player *winner, guint winner_s
 	return dialog;
 }
 
+/**
+ * @brief Shows the "ResultDialog."
+ * 
+ * @param dialog Instance of ResultDialog
+ */
 void results_dialog_show(ResultsDialog *dialog) {
 	gtk_widget_show_all(GTK_WIDGET(dialog->window));
 }

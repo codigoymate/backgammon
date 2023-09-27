@@ -57,6 +57,12 @@ void human_play_func(void *bg);
  */
 void ia_play_func(void *bg);
 
+/**
+ * @brief Function called during the delay generated for AI.
+ * 
+ * @param data Instance of Backgammon
+ * @return gboolean True to remove the timer
+ */
 gboolean ia_delayed_func(gpointer data);
 
 #endif
