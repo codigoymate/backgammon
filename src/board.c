@@ -148,22 +148,22 @@ void board_init(Board *board) {
 
 	// Test:
 	
-	board->goal[0].data = -13;
-	board->goal[1].data = 13;
+	/*board->goal[0].data = -13;
+	board->goal[1].data = 13;*/
 	
 
-	/*board->places[0].data = 2;
+	board->places[0].data = 2;
 	board->places[5].data = -5;
 	board->places[7].data = -3;
 	board->places[11].data = 5;
 	board->places[12].data = -5;
 	board->places[16].data = 3;
 	board->places[18].data = 5;
-	board->places[23].data = -2;*/
+	board->places[23].data = -2;
 
 	
-	board->places[0].data = -2;
-	board->places[23].data = 2;
+	/*board->places[0].data = -2;
+	board->places[23].data = 2;*/
 
 	for (i = 0; i < 4; i ++) board->consumed_dice[i] = FALSE;
 

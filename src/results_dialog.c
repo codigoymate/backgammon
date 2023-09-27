@@ -13,7 +13,13 @@ static void result_dialog_destroy(GtkWindow *window, gpointer data) {
 static void result_dialog_ok_clicked(GtkButton *button, gpointer data) {
 	ResultsDialog *dialog;
 	dialog = (ResultsDialog *) data;
-	gtk_widget_destroy(GTK_WIDGET(dialog->window)); 
+	gtk_widget_destroy(GTK_WIDGET(dialog->window));
+
+	dialog->bg->status = S_NOT_PLAYING;
+	board_init(dialog->bg->board);
+	bg_next_step(dialog->bg);
+
+	board_redraw(dialog->bg->board);
 }
 
 ResultsDialog *results_dialog_new(Backgammon *bg, Player *winner, guint winner_score) {
@@ -42,11 +48,13 @@ ResultsDialog *results_dialog_new(Backgammon *bg, Player *winner, guint winner_s
 	gtk_label_set_text(dialog->winner_label, str->str);
 
 	str = g_string_assign(str, "");
-	g_string_append_printf(str, "%s: %u", bg->player[0].name->str, bg->player[0].score);
+	g_string_append_printf(str, "%s: %u de %u", bg->player[0].name->str,
+			bg->player[0].score, bg->max_score);
 	gtk_label_set_text(dialog->total_pl1_label, str->str);
 
 	str = g_string_assign(str, "");
-	g_string_append_printf(str, "%s: %u", bg->player[1].name->str, bg->player[1].score);
+	g_string_append_printf(str, "%s: %u de %u", bg->player[1].name->str,
+			bg->player[1].score, bg->max_score);
 	gtk_label_set_text(dialog->total_pl2_label, str->str);
 
 	g_string_free(str, TRUE);
