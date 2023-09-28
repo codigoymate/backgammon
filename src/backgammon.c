@@ -1,9 +1,9 @@
 /**
  * @file backgammon.c
- * @author Javier Candales (javier_candales@yahoo.com.ar)
  * @brief Implementation of backgammon.h
  * @date 2023-08-14
  * 
+ * @author Javier Candales
  * @copyright Copyright (c) 2023
  * 
  */
@@ -21,15 +21,37 @@
  */
 void bg_free(Backgammon *bg);
 
+/**
+ * @brief Checks if either of the players has removed all 15 of their pieces from the board.
+ * 
+ * @param bg Backgammon instance
+ * @return gboolean True when one of the players has removed all their pieces.
+ */
 gboolean bg_check_end_game(Backgammon *bg);
+
+/**
+ * @brief Ends the round or game by determining the winner and the number of points. Calculates the results and displays the results dialog.
+ * 
+ * @param bg Backgammon instance
+ */
 void bg_end_game(Backgammon *bg);
+
+/**
+ * @brief Determines the points earned by the winner.
+ * 1: When the opponent has removed some pieces from the board.
+ * 2: (Gammon) When the opponent has not removed any pieces.
+ * 3: (Backgammon) When the opponent still has pieces in the winner's territory or in the winner's prison.
+ * 
+ * @param bg Backgammon instance
+ * @param win_dir Direction of the winner
+ * @return guint The points earned by the winner
+ */
 guint get_winner_points(Backgammon *bg, gint win_dir);
 
 /**
- * @brief Occurs when the main window is closed.
- * Frees the Backgammon instance.
+ * @brief Occurs when the main window is closed. Frees the Backgammon instance.
  * 
- * @param window main window instance
+ * @param window Main window instance
  * @param data Backgammon instance
  */
 static void bg_on_window_destroyed(GtkApplicationWindow *window, gpointer data) {
@@ -41,7 +63,7 @@ static void bg_on_window_destroyed(GtkApplicationWindow *window, gpointer data) 
  * If the game state is S_NOT_PLAYING, ends the current game if the user agrees.
  * When starting a new game, resets the board and initializes the players.
  * 
- * @param menu_item new game menu item
+ * @param menu_item New game menu item
  * @param data Backgammon instance
  */
 static void new_game_menu_item_activate(GtkMenuItem *menu_item, gpointer data) {
@@ -52,7 +74,7 @@ static void new_game_menu_item_activate(GtkMenuItem *menu_item, gpointer data) {
  * @brief Occurs when clicking the "Next Turn" button.
  * Typically associated with the human player. Switches to the next player's turn.
  * 
- * @param button button instance
+ * @param button Button instance
  * @param data Backgammon instance
  */
 static void end_turn_button_clicked(GtkWidget *button, gpointer data) {
@@ -71,9 +93,9 @@ static void end_turn_button_clicked(GtkWidget *button, gpointer data) {
  * Creates the board.
  * Sets the game state to S_NOT_PLAYING.
  * 
- * @param argc argument count
- * @param argv argument vector
- * @return Backgammon* instance of Backgammon
+ * @param argc Argument count
+ * @param argv Argument vector
+ * @return Backgammon* Backgammon instance
  */
 Backgammon *bg_new(int argc, char *argv[]) {
 	Backgammon *bg;
@@ -83,7 +105,7 @@ Backgammon *bg_new(int argc, char *argv[]) {
 
 	bg = (Backgammon *)g_malloc(sizeof(Backgammon));
 
-	// Dafault names
+	// Default names
 
 	bg->player[0].name = g_string_new(g_getenv("USER"));
 	bg->player[1].name = randomize_name();
@@ -226,7 +248,7 @@ void bg_next_turn(Backgammon *bg) {
  * @brief Returns the current player.
  * 
  * @param bg Backgammon instance
- * @return Player* instance of the current player
+ * @return Player* Instance of the current player
  */
 Player *bg_current_player(Backgammon *bg) {
 	return &bg->player[bg->player_turn];
@@ -236,7 +258,7 @@ Player *bg_current_player(Backgammon *bg) {
  * @brief Returns the opponent of the current player.
  * 
  * @param bg Backgammon instance
- * @return Player* instance of the opponent
+ * @return Player* Instance of the opponent
  */
 Player *bg_opponent(Backgammon *bg) {
 	return &bg->player[!bg->player_turn];
@@ -250,8 +272,8 @@ Player *bg_opponent(Backgammon *bg) {
  * The absolute value of the value is the number of pieces at that position.
  * 
  * @param bg Backgammon instance
- * @param data value of the position
- * @return Player* instance of the player
+ * @param data Value of the position
+ * @return Player* Instance of the player
  */
 Player *bg_player_by_data(Backgammon *bg, gint data) {
 	Player *player;
@@ -290,11 +312,22 @@ gboolean bg_all_pieces_in_territory(Backgammon *bg) {
 	return TRUE;
 }
 
+/**
+ * @brief Checks if either of the players has removed all 15 of their pieces from the board.
+ * 
+ * @param bg Backgammon instance
+ * @return gboolean True when one of the players has removed all their pieces.
+ */
 gboolean bg_check_end_game(Backgammon *bg) {
 	return bg->board->goal[0].data == 15 || bg->board->goal[0].data == -15 ||
-			bg->board->goal[1].data == 15 || bg->board->goal[1].data == -15;
+		bg->board->goal[1].data == 15 || bg->board->goal[1].data == -15;
 }
 
+/**
+ * @brief Ends the round or game by determining the winner and the number of points. Calculates the results and displays the results dialog.
+ * 
+ * @param bg Backgammon instance
+ */
 void bg_end_game(Backgammon *bg) {
 	Player *winner;
 	guint score;
@@ -324,6 +357,16 @@ void bg_end_game(Backgammon *bg) {
 	results_dialog_show(dialog);
 }
 
+/**
+ * @brief Determines the points earned by the winner.
+ * 1: When the opponent has removed some pieces from the board.
+ * 2: (Gammon) When the opponent has not removed any pieces.
+ * 3: (Backgammon) When the opponent still has pieces in the winner's territory or in the winner's prison.
+ * 
+ * @param bg Backgammon instance
+ * @param win_dir Direction of the winner
+ * @return guint The points earned by the winner
+ */
 guint get_winner_points(Backgammon *bg, gint win_dir) {
 	Board *b;
 	guint points, i;
