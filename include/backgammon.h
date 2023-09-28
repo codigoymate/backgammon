@@ -18,6 +18,7 @@
 #define S_ROLL_DICE		1
 #define S_MOVE_PIECES	2
 #define S_END_TURN		3
+#define S_END_ROUND		4
 
 #define DELAYED_FUNC_TIMEOUT		1000
 

@@ -300,6 +300,10 @@ void bg_end_game(Backgammon *bg) {
 	guint score;
 	ResultsDialog *dialog;
 
+	if (bg->status == S_END_ROUND) return;
+
+	bg->status = S_END_ROUND;
+
 	if (bg->board->goal[0].data == -15 || bg->board->goal[0].data == 15) {
 		winner = bg->player[0].direction == -1 ?
 					&bg->player[0] : &bg->player[1];
@@ -318,8 +322,6 @@ void bg_end_game(Backgammon *bg) {
 
 	dialog = results_dialog_new(bg, winner, score);
 	results_dialog_show(dialog);
-
-	bg->status = S_NOT_PLAYING;
 }
 
 guint get_winner_points(Backgammon *bg, gint win_dir) {
