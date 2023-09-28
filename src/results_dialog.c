@@ -29,6 +29,12 @@ static void result_dialog_destroy(GtkWindow *window, gpointer data) {
 	ResultsDialog *dialog;
 	dialog = (ResultsDialog *) data;
 	result_dialog_free(dialog);
+
+	dialog->bg->status = S_NOT_PLAYING;
+	board_init(dialog->bg->board);
+	bg_next_step(dialog->bg);
+
+	board_redraw(dialog->bg->board);
 }
 
 /**
@@ -41,12 +47,6 @@ static void result_dialog_ok_clicked(GtkButton *button, gpointer data) {
 	ResultsDialog *dialog;
 	dialog = (ResultsDialog *) data;
 	gtk_widget_destroy(GTK_WIDGET(dialog->window));
-
-	dialog->bg->status = S_NOT_PLAYING;
-	board_init(dialog->bg->board);
-	bg_next_step(dialog->bg);
-
-	board_redraw(dialog->bg->board);
 }
 
 /**
