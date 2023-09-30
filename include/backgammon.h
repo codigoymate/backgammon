@@ -25,6 +25,7 @@
 #include <gtk/gtk.h>
 #include <board.h>
 #include <player.h>
+#include <undo.h>
 
 /**
  * @brief Main structure of the game
@@ -33,11 +34,12 @@
 typedef struct backgammon_t {
 	GtkApplicationWindow *window;
 	GtkLabel *turn_label, *action_label;
-	GtkButton *end_turn_button;
+	GtkButton *end_turn_button, *undo_button;
 	GtkLabel *player_name_label[2],
 				*steps_label[2],
 				*score_label[2];
 	Board *board;
+	Undo undo;
 	gint player_turn, status, max_score;
 	Player player[2];
 } Backgammon;

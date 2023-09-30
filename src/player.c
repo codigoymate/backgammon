@@ -109,9 +109,9 @@ void human_play_func(void *bgp) {
 		bg->board->enable_places = FALSE;
 		gtk_label_set_text(bg->action_label, "Lanzar dados");
 		gtk_widget_set_sensitive(GTK_WIDGET(bg->end_turn_button), FALSE);
+		gtk_widget_set_sensitive(GTK_WIDGET(bg->undo_button), FALSE);
 	}
 	if (bg->status == S_MOVE_PIECES) {
-
 		// Scan possible movements
 		scan_movements(bg);
 
@@ -134,6 +134,7 @@ void human_play_func(void *bgp) {
 		bg->board->enable_places = FALSE;
 		gtk_label_set_text(bg->action_label, "Turno finalizado");
 		gtk_widget_set_sensitive(GTK_WIDGET(bg->end_turn_button), TRUE);
+		gtk_widget_set_sensitive(GTK_WIDGET(bg->undo_button), TRUE);
 	}
 }
 

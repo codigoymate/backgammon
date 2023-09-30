@@ -14,6 +14,8 @@
 #include <board.h>
 #include <movement.h>
 
+#include <undo.h>
+
 /**
  * @brief Occurs when a click is made on the dice set.
  * @param bg Backgammon instance
@@ -124,6 +126,10 @@ gboolean board_on_click(GtkDrawingArea *drw, GdkEventButton *event, gpointer dat
  */
 void dice_click(Backgammon *bg) {
 	dice_roll(bg->board->dice, bg->board->consumed_dice);
+
+	// Store undo board info
+	undo_backup(bg);
+
 	board_redraw(bg->board);
 
 	bg->status = S_MOVE_PIECES;

@@ -14,6 +14,8 @@
 #include <utils.h>
 #include <results_dialog.h>
 
+#include <undo.h>
+
 /**
  * @brief Frees the Backgammon instance.
  * 
@@ -88,6 +90,24 @@ static void end_turn_button_clicked(GtkWidget *button, gpointer data) {
 }
 
 /**
+ * @brief Occurs when clicking the "Undo" button
+ * 
+ * @param button Button instance
+ * @param data Backgammon instance
+ */
+static void undo_button_clicked(GtkWidget *button, gpointer data) {
+	Backgammon *bg;
+	bg = (Backgammon *)data;
+
+	undo_restore(bg);
+	bg->status = S_MOVE_PIECES;
+
+	board_redraw(bg->board);
+
+	bg_next_step(bg);
+}
+
+/**
  * @brief Creates an instance of Backgammon.
  * Initializes the GTK environment.
  * Creates the board.
@@ -135,6 +155,9 @@ Backgammon *bg_new(int argc, char *argv[]) {
 	bg->end_turn_button = GTK_BUTTON(gtk_builder_get_object(builder, "end-turn-button"));
 	gtk_widget_set_sensitive(GTK_WIDGET(bg->end_turn_button), FALSE);
 
+	bg->undo_button = GTK_BUTTON(gtk_builder_get_object(builder, "undo-button"));
+	gtk_widget_set_sensitive(GTK_WIDGET(bg->undo_button), FALSE);
+
 	// Players information
 	bg->player_name_label[0] = GTK_LABEL(gtk_builder_get_object(builder, "pl1-name-label"));
 	bg->player_name_label[1] = GTK_LABEL(gtk_builder_get_object(builder, "pl2-name-label"));
@@ -161,6 +184,12 @@ Backgammon *bg_new(int argc, char *argv[]) {
 		bg->end_turn_button,
 		"clicked",
 		G_CALLBACK(end_turn_button_clicked), bg
+	);
+
+	g_signal_connect(
+		bg->undo_button,
+		"clicked",
+		G_CALLBACK(undo_button_clicked), bg
 	);
 
 	bg->board = board_new(builder, bg);
