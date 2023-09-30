@@ -4,6 +4,7 @@
 #include <gtk/gtk.h>
 
 gboolean question(GtkWidget *parent, const char *msg);
+void information(GtkWidget *parent, const char *msg);
 
 GString *randomize_name(void);
 

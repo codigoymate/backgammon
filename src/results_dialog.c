@@ -9,6 +9,7 @@
  */
 
 #include <results_dialog.h>
+#include <utils.h>
 
 /**
  * @brief Frees the ResultDialog from memory.
@@ -27,14 +28,29 @@ void result_dialog_free(ResultsDialog *dialog) {
  */
 static void result_dialog_destroy(GtkWindow *window, gpointer data) {
 	ResultsDialog *dialog;
+	GString *msg;
 	dialog = (ResultsDialog *) data;
-	result_dialog_free(dialog);
 
 	dialog->bg->status = S_NOT_PLAYING;
+
 	board_init(dialog->bg->board);
-	bg_next_step(dialog->bg);
+
+	// Check winner
+	if (dialog->winner->score >= dialog->bg->max_score) {
+		msg = g_string_new(dialog->winner->name->str);
+		msg = g_string_append(msg, " gana la partida.");
+		information(GTK_WIDGET(dialog->window), msg->str);
+		g_string_free(msg, TRUE);
+
+		dialog->bg->board->enable_dice = FALSE;
+		dialog->bg->board->enable_places = FALSE;
+	} else {
+		bg_next_step(dialog->bg);
+	}
 
 	board_redraw(dialog->bg->board);
+
+	result_dialog_free(dialog);
 }
 
 /**

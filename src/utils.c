@@ -26,6 +26,24 @@ gboolean question(GtkWidget *parent, const char *msg) {
 	return result;
 }
 
+void information(GtkWidget *parent, const char *msg) {
+	GtkWidget *dialog;
+
+	dialog = gtk_message_dialog_new(
+		GTK_WINDOW(parent),
+		GTK_DIALOG_MODAL,
+		GTK_MESSAGE_INFO,
+		GTK_BUTTONS_OK,
+		"%s", msg
+	);
+
+	gtk_window_set_title(GTK_WINDOW(dialog), "Backgammon");
+
+	gtk_dialog_run(GTK_DIALOG(dialog));
+
+	gtk_widget_destroy(dialog);
+}
+
 GString *randomize_name(void) {
     gchar *file_contents = NULL, **lines, **line;
     gsize file_length = 0;
