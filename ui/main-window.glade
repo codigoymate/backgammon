@@ -135,6 +135,17 @@
                         <property name="position">2</property>
                       </packing>
                     </child>
+                    <child>
+                      <object class="GtkImage" id="pl1-double-image">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">3</property>
+                      </packing>
+                    </child>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -204,6 +215,19 @@
                         <property name="position">3</property>
                       </packing>
                     </child>
+                    <child>
+                      <object class="GtkButton" id="double-button">
+                        <property name="label" translatable="yes">Doblar</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="receives-default">True</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">4</property>
+                      </packing>
+                    </child>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -217,6 +241,18 @@
                     <property name="can-focus">False</property>
                     <property name="orientation">vertical</property>
                     <property name="baseline-position">bottom</property>
+                    <child>
+                      <object class="GtkImage" id="pl2-double-image">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="pack-type">end</property>
+                        <property name="position">-1</property>
+                      </packing>
+                    </child>
                     <child>
                       <object class="GtkLabel" id="pl2-score-label">
                         <property name="visible">True</property>

@@ -15,6 +15,7 @@
 #include <results_dialog.h>
 
 #include <undo.h>
+#include <double_dice.h>
 
 /**
  * @brief Frees the Backgammon instance.
@@ -108,6 +109,16 @@ static void undo_button_clicked(GtkWidget *button, gpointer data) {
 }
 
 /**
+ * @brief Occurs when clicking the "Double" button
+ * 
+ * @param button Button instance
+ * @param data Backgammon instance
+ */
+static void double_button_clicked(GtkWidget *button, gpointer bg) {
+	double_perform(bg);
+}
+
+/**
  * @brief Creates an instance of Backgammon.
  * Initializes the GTK environment.
  * Creates the board.
@@ -158,6 +169,9 @@ Backgammon *bg_new(int argc, char *argv[]) {
 	bg->undo_button = GTK_BUTTON(gtk_builder_get_object(builder, "undo-button"));
 	gtk_widget_set_sensitive(GTK_WIDGET(bg->undo_button), FALSE);
 
+	bg->double_button = GTK_BUTTON(gtk_builder_get_object(builder, "double-button"));
+	gtk_widget_set_sensitive(GTK_WIDGET(bg->double_button), FALSE);
+
 	// Players information
 	bg->player_name_label[0] = GTK_LABEL(gtk_builder_get_object(builder, "pl1-name-label"));
 	bg->player_name_label[1] = GTK_LABEL(gtk_builder_get_object(builder, "pl2-name-label"));
@@ -167,6 +181,19 @@ Backgammon *bg_new(int argc, char *argv[]) {
 
 	bg->score_label[0] = GTK_LABEL(gtk_builder_get_object(builder, "pl1-score-label"));
 	bg->score_label[1] = GTK_LABEL(gtk_builder_get_object(builder, "pl2-score-label"));
+
+	// Double
+	bg->double_image[0] = GTK_IMAGE(gtk_builder_get_object(builder, "pl1-double-image"));
+	bg->double_image[1] = GTK_IMAGE(gtk_builder_get_object(builder, "pl2-double-image"));
+
+	bg->double_pixbuf[0] = gdk_pixbuf_new_from_file_at_scale("ui/2.png", DDICE_SIZE, DDICE_SIZE, TRUE, NULL);
+	bg->double_pixbuf[1] = gdk_pixbuf_new_from_file_at_scale("ui/4.png", DDICE_SIZE, DDICE_SIZE, TRUE, NULL);
+	bg->double_pixbuf[2] = gdk_pixbuf_new_from_file_at_scale("ui/8.png", DDICE_SIZE, DDICE_SIZE, TRUE, NULL);
+	bg->double_pixbuf[3] = gdk_pixbuf_new_from_file_at_scale("ui/16.png", DDICE_SIZE, DDICE_SIZE, TRUE, NULL);
+	bg->double_pixbuf[4] = gdk_pixbuf_new_from_file_at_scale("ui/32.png", DDICE_SIZE, DDICE_SIZE, TRUE, NULL);
+	bg->double_pixbuf[5] = gdk_pixbuf_new_from_file_at_scale("ui/64.png", DDICE_SIZE, DDICE_SIZE, TRUE, NULL);
+
+	//gtk_image_set_from_pixbuf(bg->double_image[0], bg->double_pixbuf[0]);
 
 	g_signal_connect(
 		gtk_builder_get_object(builder, "new-game-menu-item"),
@@ -190,6 +217,12 @@ Backgammon *bg_new(int argc, char *argv[]) {
 		bg->undo_button,
 		"clicked",
 		G_CALLBACK(undo_button_clicked), bg
+	);
+
+	g_signal_connect(
+		bg->double_button,
+		"clicked",
+		G_CALLBACK(double_button_clicked), bg
 	);
 
 	bg->board = board_new(builder, bg);
@@ -374,7 +407,14 @@ void bg_end_game(Backgammon *bg) {
 					&bg->player[0] : &bg->player[1];
 	}
 
+	// Get points: 1 normal; 2 gammon; 3 backgammon
 	score = get_winner_points(bg, winner->direction);
+
+	// Multiply for double dice
+	score *= bg->player[0].double_points;
+	score *= bg->player[1].double_points;
+
+	// Add socore to winner
 	winner->score += score;
 
 #ifdef BG_DEBUG

@@ -2,7 +2,7 @@ SRC := $(wildcard src/*.c)
 OBJ := $(addprefix obj/, $(notdir $(SRC:.c=.o)))
 
 CFLAGS := -g -D BG_DEBUG -Wall -I include $(shell pkg-config --cflags gtk+-3.0)
-LFLAGS := $(shell pkg-config --libs gtk+-3.0)
+LFLAGS := $(shell pkg-config --libs gtk+-3.0) -lm
 
 ifeq ($(OS), Windows_NT)
 	BIN := bin/backgammon.exe

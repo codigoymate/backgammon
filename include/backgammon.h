@@ -21,6 +21,7 @@
 #define S_END_ROUND		4
 
 #define DELAYED_FUNC_TIMEOUT		1000
+#define DDICE_SIZE					58
 
 #include <gtk/gtk.h>
 #include <board.h>
@@ -34,10 +35,12 @@
 typedef struct backgammon_t {
 	GtkApplicationWindow *window;
 	GtkLabel *turn_label, *action_label;
-	GtkButton *end_turn_button, *undo_button;
+	GtkButton *end_turn_button, *undo_button, *double_button;
 	GtkLabel *player_name_label[2],
 				*steps_label[2],
 				*score_label[2];
+	GtkImage *double_image[2];
+	GdkPixbuf *double_pixbuf[6];
 	Board *board;
 	Undo undo;
 	gint player_turn, status, max_score;

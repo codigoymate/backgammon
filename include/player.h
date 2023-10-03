@@ -21,7 +21,7 @@
  */
 typedef struct player_t {
 	GString *name;
-	gint piece, direction, score;
+	gint piece, direction, score, double_points;
 	void (*play_func)(void *);
 	gboolean ia;
 } Player;

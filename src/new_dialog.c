@@ -180,6 +180,9 @@ static void new_dialog_start_button_clicked(GtkWidget *widget, gpointer data) {
 	// Misc:
 	for (index = 0; index < 2; index ++) {
 		bg->player[index].score = 0;
+		bg->player[index].double_points = 1;
+		// Clear double dice
+		gtk_image_set_from_pixbuf(bg->double_image[index], NULL);
 	}
 
 	bg->status = S_NOT_PLAYING;
