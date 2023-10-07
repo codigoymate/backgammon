@@ -85,6 +85,7 @@ static void end_turn_button_clicked(GtkWidget *button, gpointer data) {
 	bg = (Backgammon *)data;
 
 	gtk_widget_set_sensitive(GTK_WIDGET(bg->end_turn_button), FALSE);
+	gtk_widget_set_sensitive(GTK_WIDGET(bg->undo_button), FALSE);
 
 	bg_next_turn(bg);
 	bg_next_step(bg);
