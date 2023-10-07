@@ -11,6 +11,7 @@
 
 #include <backgammon.h>
 #include <math.h>
+#include <results_dialog.h>
 
 /**
  * @brief Sets the Pixbuf based on the number of points.
@@ -44,6 +45,7 @@ void set_double_dice_image(Backgammon *bg, GtkImage *img, guint points) {
 void double_perform(void *bgp) {
 	Backgammon *bg;
 	guint points;
+	ResultsDialog *dialog;
 
 	bg = (Backgammon *) bgp;
 
@@ -56,6 +58,22 @@ void double_perform(void *bgp) {
 
 	// Maximum reached. Cannot double anymore
 	if (points > 64) return;
+
+	if (!bg_opponent(bg)->play_func(bg, TRUE)) {
+		// The opponent reached double request
+		bg->status = S_END_ROUND;
+
+		// Multiply for double dice
+		points = 1;
+		points *= bg->player[0].double_points;
+		points *= bg->player[1].double_points;
+		bg_current_player(bg)->score += points;
+
+		dialog = results_dialog_new(bg, bg_current_player(bg), points);
+		results_dialog_show(dialog);
+
+		return ;
+	}
 
 	// Sets the points
 	bg_opponent(bg)->double_points = 1;

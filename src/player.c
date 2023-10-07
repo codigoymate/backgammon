@@ -12,6 +12,11 @@
 #include <backgammon.h>
 #include <movement.h>
 #include <dice.h>
+#include <utils.h>
+#include <double_dice.h>
+
+gboolean human_double_request(Backgammon *bg);
+gboolean ia_double_request(Backgammon *bg);
 
 /**
  * @brief Update player information:
@@ -99,10 +104,14 @@ guint player_count_steps(void *bgp, Player *player) {
 /**
  * @brief Function assigned to a player to configure them as a human player.
  * 
- * @param bgp Backgammon instance
+ * @param bg Backgammon instance
+ * @param double_request TRUE when the player is asked to double
+ * @return boolean FALSE if opponent rejects the double
  */
-void human_play_func(void *bgp) {
+gboolean human_play_func(void *bgp, gboolean double_request) {
 	Backgammon *bg = (Backgammon *) bgp;
+
+	if (double_request) return human_double_request(bg);
 
 	if (bg->status == S_ROLL_DICE) {
 		bg->board->enable_dice = TRUE;
@@ -141,17 +150,23 @@ void human_play_func(void *bgp) {
 		gtk_widget_set_sensitive(GTK_WIDGET(bg->undo_button), TRUE);
 		gtk_widget_set_sensitive(GTK_WIDGET(bg->double_button), FALSE);
 	}
+
+	return TRUE;
 }
 
 /**
  * @brief Function assigned to a player to configure them as an artificial intelligence.
  * 
- * @param bgp Backgammon instance
+ * @param bg Backgammon instance
+ * @param double_request TRUE when the player is asked to double
+ * @return boolean FALSE if opponent rejects the double
  */
-void ia_play_func(void *bgp) {
+gboolean ia_play_func(void *bgp, gboolean double_request) {
 	guint choice, i;
 	GList *iter;
 	Backgammon *bg = (Backgammon *) bgp;
+
+	if (double_request) return ia_double_request(bg);
 
 	bg->board->enable_dice = FALSE;
 	bg->board->enable_places = FALSE;
@@ -159,6 +174,10 @@ void ia_play_func(void *bgp) {
 	if (bg->status == S_ROLL_DICE) {
 		gtk_label_set_text(bg->action_label, "Lanzar dados");
 		gtk_widget_set_sensitive(GTK_WIDGET(bg->end_turn_button), FALSE);
+
+		if (g_random_double_range(0, 1.0) < 0.1) {
+			double_perform(bg);
+		}
 		
 		dice_roll(bg->board->dice, bg->board->consumed_dice);
 
@@ -200,6 +219,8 @@ void ia_play_func(void *bgp) {
 		gtk_label_set_text(bg->action_label, "Turno finalizado");
 		gtk_widget_set_sensitive(GTK_WIDGET(bg->end_turn_button), TRUE);
 	}
+
+	return TRUE;
 }
 
 /**
@@ -211,7 +232,27 @@ void ia_play_func(void *bgp) {
 gboolean ia_delayed_func(gpointer data) {
 	Backgammon *bg = (Backgammon *) data;
 
-	bg_current_player(bg)->play_func(bg);
+	bg_current_player(bg)->play_func(bg, FALSE);
 
 	return G_SOURCE_REMOVE;
+}
+
+gboolean human_double_request(Backgammon *bg) {
+	GString *msg;
+	gboolean result;
+
+	msg = g_string_new("");
+	g_string_append_printf(msg, "%s dobla la apuesta ¿Aceptar?",
+			bg_current_player(bg)->name->str);
+
+	result = question(GTK_WIDGET(bg->window), msg->str);
+
+	g_string_free(msg, TRUE);
+
+	return result;
+}
+
+gboolean ia_double_request(Backgammon *bg) {
+	// TODO: improve ia
+	return g_random_double_range(0.0, 1.0) > 0.5;
 }

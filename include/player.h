@@ -22,7 +22,7 @@
 typedef struct player_t {
 	GString *name;
 	gint piece, direction, score, double_points;
-	void (*play_func)(void *);
+	gboolean (*play_func)(void *, gboolean);
 	gboolean ia;
 } Player;
 
@@ -47,15 +47,19 @@ guint player_count_steps(void *bg, Player *player);
  * @brief Function assigned to a player to configure them as a human player.
  * 
  * @param bg Backgammon instance
+ * @param double_request TRUE when the player is asked to double
+ * @return boolean FALSE if opponent rejects the double
  */
-void human_play_func(void *bg);
+gboolean human_play_func(void *bg, gboolean double_request);
 
 /**
  * @brief Function assigned to a player to configure them as an artificial intelligence.
  * 
  * @param bg Backgammon instance
+ * @param double_request TRUE when the player is asked to double
+ * @return boolean FALSE if opponent rejects the double
  */
-void ia_play_func(void *bg);
+gboolean ia_play_func(void *bg, gboolean double_request);
 
 /**
  * @brief Function called during the delay generated for AI.

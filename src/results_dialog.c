@@ -35,6 +35,12 @@ static void result_dialog_destroy(GtkWindow *window, gpointer data) {
 
 	board_init(dialog->bg->board);
 
+	dialog->bg->player[0].double_points =
+	dialog->bg->player[1].double_points = 1;
+
+	gtk_image_set_from_pixbuf(dialog->bg->double_image[0], NULL);
+	gtk_image_set_from_pixbuf(dialog->bg->double_image[1], NULL);
+
 	// Check winner
 	if (dialog->winner->score >= dialog->bg->max_score) {
 		msg = g_string_new(dialog->winner->name->str);
