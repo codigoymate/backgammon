@@ -11,6 +11,10 @@
 #include <results_dialog.h>
 #include <utils.h>
 
+#include <libintl.h>
+
+#define _(str)		gettext(str)
+
 /**
  * @brief Frees the ResultDialog from memory.
  * 
@@ -43,8 +47,8 @@ static void result_dialog_destroy(GtkWindow *window, gpointer data) {
 
 	// Check winner
 	if (dialog->winner->score >= dialog->bg->max_score) {
-		msg = g_string_new(dialog->winner->name->str);
-		msg = g_string_append(msg, " gana la partida.");
+		msg = g_string_new("");
+		g_string_append_printf(msg, _("%s wins the game !!."), dialog->winner->name->str);
 		information(GTK_WIDGET(dialog->window), msg->str);
 		g_string_free(msg, TRUE);
 
@@ -100,17 +104,17 @@ ResultsDialog *results_dialog_new(Backgammon *bg, Player *winner, guint winner_s
 	dialog->total_pl2_label = GTK_LABEL(gtk_builder_get_object(builder, "total-pl2-label"));
 
 	str = g_string_new("");
-	g_string_append_printf(str, "%s gana la ronda con %u puntos",
+	g_string_append_printf(str, _("%s wins the round with %u points"),
 			dialog->winner->name->str, dialog->winner_score);
 	gtk_label_set_text(dialog->winner_label, str->str);
 
 	str = g_string_assign(str, "");
-	g_string_append_printf(str, "%s: %u de %u", bg->player[0].name->str,
+	g_string_append_printf(str, _("%s: %u of %u"), bg->player[0].name->str,
 			bg->player[0].score, bg->max_score);
 	gtk_label_set_text(dialog->total_pl1_label, str->str);
 
 	str = g_string_assign(str, "");
-	g_string_append_printf(str, "%s: %u de %u", bg->player[1].name->str,
+	g_string_append_printf(str, _("%s: %u of %u"), bg->player[1].name->str,
 			bg->player[1].score, bg->max_score);
 	gtk_label_set_text(dialog->total_pl2_label, str->str);
 

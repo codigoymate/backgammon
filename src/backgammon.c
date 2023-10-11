@@ -17,6 +17,10 @@
 #include <undo.h>
 #include <double_dice.h>
 
+#include <libintl.h>
+
+#define _(str)		gettext(str)
+
 /**
  * @brief Frees the Backgammon instance.
  * 
@@ -299,8 +303,8 @@ void bg_next_turn(Backgammon *bg) {
 	bg->player_turn++;
 	if (bg->player_turn >= 2) bg->player_turn = 0;
 
-	str = g_string_new("Turno de\n");
-	str = g_string_append(str, bg_current_player(bg)->name->str);
+	str = g_string_new("");
+	g_string_printf(str, _("%s' turn"), bg_current_player(bg)->name->str);
 	gtk_label_set_text(bg->turn_label, str->str);
 	g_string_free(str, TRUE);
 

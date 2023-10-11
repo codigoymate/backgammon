@@ -1,0 +1,59 @@
+# Spanish translations for PACKAGE package.
+# Copyright (C) 2023 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Javier Candales <javier_candales@yahoo.com.ar>, 2023.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-10 20:14-0300\n"
+"PO-Revision-Date: 2023-10-09 22:44-0300\n"
+"Last-Translator: Javier Candales <javier_candales@yahoo.com.ar>\n"
+"Language-Team: Spanish <es@tp.org.es>\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: src/player.c:249
+#, c-format
+msgid "%s double score. Accept?"
+msgstr "%s dobla los puntos. Aceptar?"
+
+#: src/results_dialog.c:51
+#, c-format
+msgid "%s wins the game !!."
+msgstr "%s gana el juego!."
+
+#: src/results_dialog.c:107
+#, c-format
+msgid "%s wins the round with %u points"
+msgstr "%s gana la ronda con %u puntos"
+
+#: src/backgammon.c:307
+#, c-format
+msgid "%s' turn"
+msgstr "Turno de %s"
+
+#: src/results_dialog.c:112 src/results_dialog.c:117
+#, c-format
+msgid "%s: %u of %u"
+msgstr "%s: %u de %u"
+
+#: src/new_dialog.c:117
+msgid "End the current game?"
+msgstr "Finalizar el juego?"
+
+#: src/player.c:152 src/player.c:223
+msgid "End turn"
+msgstr "Turno finalizado"
+
+#: src/player.c:145 src/player.c:207
+msgid "Move pieces"
+msgstr "Mover fichas"
+
+#: src/player.c:123 src/player.c:179
+msgid "Throw dice"
+msgstr "Lanzar dados"

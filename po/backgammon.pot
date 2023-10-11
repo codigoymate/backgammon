@@ -1,0 +1,59 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-10 21:19-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/player.c:249
+#, c-format
+msgid "%s double score. Accept?"
+msgstr ""
+
+#: src/results_dialog.c:51
+#, c-format
+msgid "%s wins the game !!."
+msgstr ""
+
+#: src/results_dialog.c:107
+#, c-format
+msgid "%s wins the round with %u points"
+msgstr ""
+
+#: src/backgammon.c:307
+#, c-format
+msgid "%s' turn"
+msgstr ""
+
+#: src/results_dialog.c:112 src/results_dialog.c:117
+#, c-format
+msgid "%s: %u of %u"
+msgstr ""
+
+#: src/new_dialog.c:117
+msgid "End the current game?"
+msgstr ""
+
+#: src/player.c:152 src/player.c:223
+msgid "End turn"
+msgstr ""
+
+#: src/player.c:145 src/player.c:207
+msgid "Move pieces"
+msgstr ""
+
+#: src/player.c:123 src/player.c:179
+msgid "Throw dice"
+msgstr ""

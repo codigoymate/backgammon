@@ -39,3 +39,23 @@ else
 run: $(BIN)
 	./$(BIN)
 endif
+
+transl_start:
+	mkdir -p po/es/LC_MESSAGES
+	mkdir -p po/fr/LC_MESSAGES
+	xgettext --keyword=_ --language=C --add-comments --sort-output \
+		-o po/backgammon.pot $(SRC)
+	msginit --input=po/backgammon.pot --locale=es_ES.UTF-8 --output=po/es/backgammon.po
+	msginit --input=po/backgammon.pot --locale=fr_FR.UTF-8 --output=po/fr/backgammon.po
+	msgfmt --output-file=po/es/LC_MESSAGES/backgammon.mo po/es/backgammon.po
+	msgfmt --output-file=po/fr/LC_MESSAGES/backgammon.mo po/fr/backgammon.po
+
+transl_update:
+	mkdir -p po/es/LC_MESSAGES
+	mkdir -p po/fr/LC_MESSAGES
+	xgettext --keyword=_ --language=C --add-comments --sort-output \
+		-o po/backgammon.pot $(SRC)
+	msgmerge --update po/es/backgammon.po po/backgammon.pot
+	msgmerge --update po/fr/backgammon.po po/backgammon.pot
+	msgfmt --output-file=po/es/LC_MESSAGES/backgammon.mo po/es/backgammon.po
+	msgfmt --output-file=po/fr/LC_MESSAGES/backgammon.mo po/fr/backgammon.po

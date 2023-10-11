@@ -2,6 +2,10 @@
 
 #include <utils.h>
 
+#include <libintl.h>
+
+#define _(str)	gettext(str)
+
 /**
  * @brief Update clockwise of player 1 to set player's directions.
  * 
@@ -110,7 +114,7 @@ static void new_dialog_start_button_clicked(GtkWidget *widget, gpointer data) {
 	bg = dialog->bg;
 
 	if (bg->status != S_NOT_PLAYING) {
-		if (!question(GTK_WIDGET(bg->window), "¿Finalizar partida actual?")) {
+		if (!question(GTK_WIDGET(bg->window), _("End the current game?"))) {
 			new_dialog_free((NewDialog *) data);
 			return;
 		}

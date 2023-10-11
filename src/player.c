@@ -15,6 +15,10 @@
 #include <utils.h>
 #include <double_dice.h>
 
+#include <libintl.h>
+
+#define _(str)	gettext(str)
+
 gboolean human_double_request(Backgammon *bg);
 gboolean ia_double_request(Backgammon *bg);
 
@@ -116,7 +120,7 @@ gboolean human_play_func(void *bgp, gboolean double_request) {
 	if (bg->status == S_ROLL_DICE) {
 		bg->board->enable_dice = TRUE;
 		bg->board->enable_places = FALSE;
-		gtk_label_set_text(bg->action_label, "Lanzar dados");
+		gtk_label_set_text(bg->action_label, _("Throw dice"));
 		gtk_widget_set_sensitive(GTK_WIDGET(bg->end_turn_button), FALSE);
 		gtk_widget_set_sensitive(GTK_WIDGET(bg->undo_button), FALSE);
 
@@ -138,14 +142,14 @@ gboolean human_play_func(void *bgp, gboolean double_request) {
 
 		bg->board->enable_dice = FALSE;
 		bg->board->enable_places = TRUE;
-		gtk_label_set_text(bg->action_label, "Mover fichas");
+		gtk_label_set_text(bg->action_label, _("Move pieces"));
 		gtk_widget_set_sensitive(GTK_WIDGET(bg->end_turn_button), FALSE);
 		gtk_widget_set_sensitive(GTK_WIDGET(bg->double_button), FALSE);
 	}
 	if (bg->status == S_END_TURN) {
 		bg->board->enable_dice = FALSE;
 		bg->board->enable_places = FALSE;
-		gtk_label_set_text(bg->action_label, "Turno finalizado");
+		gtk_label_set_text(bg->action_label, _("End turn"));
 		gtk_widget_set_sensitive(GTK_WIDGET(bg->end_turn_button), TRUE);
 		gtk_widget_set_sensitive(GTK_WIDGET(bg->undo_button), TRUE);
 		gtk_widget_set_sensitive(GTK_WIDGET(bg->double_button), FALSE);
@@ -172,7 +176,7 @@ gboolean ia_play_func(void *bgp, gboolean double_request) {
 	bg->board->enable_places = FALSE;
 
 	if (bg->status == S_ROLL_DICE) {
-		gtk_label_set_text(bg->action_label, "Lanzar dados");
+		gtk_label_set_text(bg->action_label, _("Throw dice"));
 		gtk_widget_set_sensitive(GTK_WIDGET(bg->end_turn_button), FALSE);
 
 		if (g_random_double_range(0, 1.0) < 0.1) {
@@ -200,7 +204,7 @@ gboolean ia_play_func(void *bgp, gboolean double_request) {
 			g_print("Movements: %u\n\n", g_list_length(bg->board->movements));
 #endif
 
-			gtk_label_set_text(bg->action_label, "Mover fichas");
+			gtk_label_set_text(bg->action_label, _("Move pieces"));
 			gtk_widget_set_sensitive(GTK_WIDGET(bg->end_turn_button), FALSE);
 
 			choice = g_random_int_range(0, g_list_length(bg->board->movements));
@@ -216,7 +220,7 @@ gboolean ia_play_func(void *bgp, gboolean double_request) {
 		}
 		bg_next_step(bg);
 	} else if (bg->status == S_END_TURN) {
-		gtk_label_set_text(bg->action_label, "Turno finalizado");
+		gtk_label_set_text(bg->action_label, _("End turn"));
 		gtk_widget_set_sensitive(GTK_WIDGET(bg->end_turn_button), TRUE);
 	}
 
@@ -242,7 +246,7 @@ gboolean human_double_request(Backgammon *bg) {
 	gboolean result;
 
 	msg = g_string_new("");
-	g_string_append_printf(msg, "%s dobla la apuesta ¿Aceptar?",
+	g_string_append_printf(msg, _("%s double score. Accept?"),
 			bg_current_player(bg)->name->str);
 
 	result = question(GTK_WIDGET(bg->window), msg->str);
