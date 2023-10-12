@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-10 20:14-0300\n"
+"POT-Creation-Date: 2023-10-11 21:36-0300\n"
 "PO-Revision-Date: 2023-10-09 22:44-0300\n"
 "Last-Translator: Javier Candales <javier_candales@yahoo.com.ar>\n"
 "Language-Team: French <traduc@traduc.org>\n"
@@ -16,6 +16,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. Score
+#: src/player.c:59 src/player.c:62
+#, c-format
+msgid "%i points"
+msgstr "%i points"
 
 #: src/player.c:249
 #, c-format
@@ -42,6 +48,38 @@ msgstr "Tour de %s"
 msgid "%s: %u of %u"
 msgstr "%s: %u sur %u"
 
+#: src/backgammon.c:167
+msgid "<F2> Start"
+msgstr "<F2> Commencer"
+
+#: ui/new-dialog.glade:101 ui/new-dialog.glade:116
+msgid "AI"
+msgstr "IA"
+
+#: ui/main-window.glade:7
+msgid "Backgammon"
+msgstr "Backgammon"
+
+#: ui/new-dialog.glade:14
+msgid "Backgammon - New Game"
+msgstr "Backgammon - Nouveau Jeu"
+
+#: ui/results.glade:7
+msgid "Backgammon - Results"
+msgstr "Backgammon - Résultats"
+
+#: ui/results.glade:60
+msgid "Continue"
+msgstr "Continuer"
+
+#: ui/main-window.glade:215
+msgid "Double"
+msgstr "Multiplier"
+
+#: ui/main-window.glade:188
+msgid "End Turn"
+msgstr "Terminer le tour"
+
 #: src/new_dialog.c:117
 msgid "End the current game?"
 msgstr "Terminer le jeu actuel ?"
@@ -50,10 +88,52 @@ msgstr "Terminer le jeu actuel ?"
 msgid "End turn"
 msgstr "Terminer le tour"
 
+#: ui/new-dialog.glade:100 ui/new-dialog.glade:115
+msgid "Human"
+msgstr "Humain"
+
 #: src/player.c:145 src/player.c:207
 msgid "Move pieces"
 msgstr "Déplacer les pions"
 
+#: ui/new-dialog.glade:55
+msgid "Player 1:"
+msgstr "Joueur 1:"
+
+#: ui/new-dialog.glade:77
+msgid "Player 2:"
+msgstr "Joueur 2:"
+
+#: ui/new-dialog.glade:249
+msgid "Start"
+msgstr "Commencer"
+
+#. Steps
+#: src/player.c:51 src/player.c:54
+#, c-format
+msgid "Steps: %i"
+msgstr "%i étapes"
+
 #: src/player.c:123 src/player.c:179
 msgid "Throw dice"
 msgstr "Lancer des dés"
+
+#: ui/new-dialog.glade:201
+msgid "To win:"
+msgstr "Points pour gagner:"
+
+#: ui/main-window.glade:202
+msgid "Undo"
+msgstr "Annuler"
+
+#: ui/main-window.glade:23
+msgid "_Backgammon"
+msgstr "_Backgammon"
+
+#: ui/main-window.glade:33
+msgid "_New Game"
+msgstr "_Nouveau Jeu"
+
+#: ui/main-window.glade:48
+msgid "_Quit"
+msgstr "_Quitter"

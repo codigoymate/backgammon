@@ -164,7 +164,7 @@ Backgammon *bg_new(int argc, char *argv[]) {
 	g_signal_connect(bg->window, "destroy", G_CALLBACK(bg_on_window_destroyed), bg);
 
 	bg->turn_label = GTK_LABEL(gtk_builder_get_object(builder, "turn-label"));
-	gtk_label_set_text(bg->turn_label, "<F2> Comenzar");
+	gtk_label_set_text(bg->turn_label, _("<F2> Start"));
 	bg->action_label = GTK_LABEL(gtk_builder_get_object(builder, "action-label"));
 	gtk_label_set_text(bg->action_label, "");
 

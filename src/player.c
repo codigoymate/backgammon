@@ -48,18 +48,18 @@ void player_update(void *bgp) {
 	gtk_label_set_text(bg->player_name_label[1], player2->name->str);
 
 	// Steps
-	number = g_strdup_printf("%i pasos", player_count_steps(bg, player1));
+	number = g_strdup_printf(_("Steps: %i"), player_count_steps(bg, player1));
 	gtk_label_set_text(bg->steps_label[0], number);
 	g_free(number);
-	number = g_strdup_printf("%i pasos", player_count_steps(bg, player2));
+	number = g_strdup_printf(_("Steps: %i"), player_count_steps(bg, player2));
 	gtk_label_set_text(bg->steps_label[1], number);
 	g_free(number);
 
 	// Score
-	number = g_strdup_printf("%i puntos", player1->score);
+	number = g_strdup_printf(_("%i points"), player1->score);
 	gtk_label_set_text(bg->score_label[0], number);
 	g_free(number);
-	number = g_strdup_printf("%i puntos", player2->score);
+	number = g_strdup_printf(_("%i points"), player2->score);
 	gtk_label_set_text(bg->score_label[1], number);
 	g_free(number);
 }

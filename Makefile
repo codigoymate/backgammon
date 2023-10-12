@@ -43,8 +43,8 @@ endif
 transl_start:
 	mkdir -p po/es/LC_MESSAGES
 	mkdir -p po/fr/LC_MESSAGES
-	xgettext --keyword=_ --language=C --add-comments --sort-output \
-		-o po/backgammon.pot $(SRC)
+	xgettext --keyword=_ --add-comments --sort-output \
+		-o po/backgammon.pot $(SRC) $(wildcard ui/*.glade)
 	msginit --input=po/backgammon.pot --locale=es_ES.UTF-8 --output=po/es/backgammon.po
 	msginit --input=po/backgammon.pot --locale=fr_FR.UTF-8 --output=po/fr/backgammon.po
 	msgfmt --output-file=po/es/LC_MESSAGES/backgammon.mo po/es/backgammon.po
@@ -53,8 +53,8 @@ transl_start:
 transl_update:
 	mkdir -p po/es/LC_MESSAGES
 	mkdir -p po/fr/LC_MESSAGES
-	xgettext --keyword=_ --language=C --add-comments --sort-output \
-		-o po/backgammon.pot $(SRC)
+	xgettext --keyword=_ --add-comments --sort-output \
+		-o po/backgammon.pot $(SRC) $(wildcard ui/*.glade)
 	msgmerge --update po/es/backgammon.po po/backgammon.pot
 	msgmerge --update po/fr/backgammon.po po/backgammon.pot
 	msgfmt --output-file=po/es/LC_MESSAGES/backgammon.mo po/es/backgammon.po

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-10 21:19-0300\n"
+"POT-Creation-Date: 2023-10-11 21:58-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,12 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#. Score
+#: src/player.c:59 src/player.c:62
+#, c-format
+msgid "%i points"
+msgstr ""
 
 #: src/player.c:249
 #, c-format
@@ -42,6 +48,38 @@ msgstr ""
 msgid "%s: %u of %u"
 msgstr ""
 
+#: src/backgammon.c:167
+msgid "<F2> Start"
+msgstr ""
+
+#: ui/new-dialog.glade:101 ui/new-dialog.glade:116
+msgid "AI"
+msgstr ""
+
+#: ui/main-window.glade:7
+msgid "Backgammon"
+msgstr ""
+
+#: ui/new-dialog.glade:14
+msgid "Backgammon - New Game"
+msgstr ""
+
+#: ui/results.glade:7
+msgid "Backgammon - Results"
+msgstr ""
+
+#: ui/results.glade:60
+msgid "Continue"
+msgstr ""
+
+#: ui/main-window.glade:215
+msgid "Double"
+msgstr ""
+
+#: ui/main-window.glade:188
+msgid "End Turn"
+msgstr ""
+
 #: src/new_dialog.c:117
 msgid "End the current game?"
 msgstr ""
@@ -50,10 +88,52 @@ msgstr ""
 msgid "End turn"
 msgstr ""
 
+#: ui/new-dialog.glade:100 ui/new-dialog.glade:115
+msgid "Human"
+msgstr ""
+
 #: src/player.c:145 src/player.c:207
 msgid "Move pieces"
 msgstr ""
 
+#: ui/new-dialog.glade:55
+msgid "Player 1:"
+msgstr ""
+
+#: ui/new-dialog.glade:77
+msgid "Player 2:"
+msgstr ""
+
+#: ui/new-dialog.glade:249
+msgid "Start"
+msgstr ""
+
+#. Steps
+#: src/player.c:51 src/player.c:54
+#, c-format
+msgid "Steps: %i"
+msgstr ""
+
 #: src/player.c:123 src/player.c:179
 msgid "Throw dice"
+msgstr ""
+
+#: ui/new-dialog.glade:201
+msgid "To win:"
+msgstr ""
+
+#: ui/main-window.glade:202
+msgid "Undo"
+msgstr ""
+
+#: ui/main-window.glade:23
+msgid "_Backgammon"
+msgstr ""
+
+#: ui/main-window.glade:33
+msgid "_New Game"
+msgstr ""
+
+#: ui/main-window.glade:48
+msgid "_Quit"
 msgstr ""

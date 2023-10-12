@@ -103,7 +103,6 @@
                       <object class="GtkLabel" id="pl1-name-label">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="label" translatable="yes">Jugador 1</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -115,7 +114,6 @@
                       <object class="GtkLabel" id="pl1-steps-label">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="label" translatable="yes">Pasos</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -127,7 +125,6 @@
                       <object class="GtkLabel" id="pl1-score-label">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="label" translatable="yes">Puntuación</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -165,7 +162,6 @@
                       <object class="GtkLabel" id="turn-label">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="label" translatable="yes">player</property>
                         <style>
                           <class name="player-turn"/>
                         </style>
@@ -180,7 +176,6 @@
                       <object class="GtkLabel" id="action-label">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="label" translatable="yes">action</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -190,7 +185,7 @@
                     </child>
                     <child>
                       <object class="GtkButton" id="end-turn-button">
-                        <property name="label" translatable="yes">Finalizar Turno</property>
+                        <property name="label" translatable="yes">End Turn</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="receives-default">True</property>
@@ -204,7 +199,7 @@
                     </child>
                     <child>
                       <object class="GtkButton" id="undo-button">
-                        <property name="label" translatable="yes">Deshacer</property>
+                        <property name="label" translatable="yes">Undo</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="receives-default">True</property>
@@ -217,7 +212,7 @@
                     </child>
                     <child>
                       <object class="GtkButton" id="double-button">
-                        <property name="label" translatable="yes">Doblar</property>
+                        <property name="label" translatable="yes">Double</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="receives-default">True</property>
@@ -257,7 +252,6 @@
                       <object class="GtkLabel" id="pl2-score-label">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="label" translatable="yes">Puntuación</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -270,7 +264,6 @@
                       <object class="GtkLabel" id="pl2-steps-label">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="label" translatable="yes">Pasos</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -283,7 +276,6 @@
                       <object class="GtkLabel" id="pl2-name-label">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="label" translatable="yes">Jugador 2</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>

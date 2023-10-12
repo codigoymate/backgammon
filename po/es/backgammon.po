@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-10 20:14-0300\n"
+"POT-Creation-Date: 2023-10-11 21:36-0300\n"
 "PO-Revision-Date: 2023-10-09 22:44-0300\n"
 "Last-Translator: Javier Candales <javier_candales@yahoo.com.ar>\n"
 "Language-Team: Spanish <es@tp.org.es>\n"
@@ -17,15 +17,21 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#. Score
+#: src/player.c:59 src/player.c:62
+#, c-format
+msgid "%i points"
+msgstr "%i puntos"
+
 #: src/player.c:249
 #, c-format
 msgid "%s double score. Accept?"
-msgstr "%s dobla los puntos. Aceptar?"
+msgstr "%s dobla los puntos. ¿Aceptar?"
 
 #: src/results_dialog.c:51
 #, c-format
 msgid "%s wins the game !!."
-msgstr "%s gana el juego!."
+msgstr "¡%s gana el juego!."
 
 #: src/results_dialog.c:107
 #, c-format
@@ -42,18 +48,92 @@ msgstr "Turno de %s"
 msgid "%s: %u of %u"
 msgstr "%s: %u de %u"
 
+#: src/backgammon.c:167
+msgid "<F2> Start"
+msgstr "<F2> Comenzar"
+
+#: ui/new-dialog.glade:101 ui/new-dialog.glade:116
+msgid "AI"
+msgstr "IA"
+
+#: ui/main-window.glade:7
+msgid "Backgammon"
+msgstr "Backgammon"
+
+#: ui/new-dialog.glade:14
+msgid "Backgammon - New Game"
+msgstr "Backgammon - Nuevo Juego"
+
+#: ui/results.glade:7
+msgid "Backgammon - Results"
+msgstr "Backgammon - Resultados"
+
+#: ui/results.glade:60
+msgid "Continue"
+msgstr "Continuar"
+
+#: ui/main-window.glade:215
+msgid "Double"
+msgstr "Doble"
+
+#: ui/main-window.glade:188
+msgid "End Turn"
+msgstr "Turno finalizado"
+
 #: src/new_dialog.c:117
 msgid "End the current game?"
-msgstr "Finalizar el juego?"
+msgstr "¿Finalizar el juego?"
 
 #: src/player.c:152 src/player.c:223
 msgid "End turn"
 msgstr "Turno finalizado"
 
+#: ui/new-dialog.glade:100 ui/new-dialog.glade:115
+msgid "Human"
+msgstr "Humano"
+
 #: src/player.c:145 src/player.c:207
 msgid "Move pieces"
 msgstr "Mover fichas"
 
+#: ui/new-dialog.glade:55
+msgid "Player 1:"
+msgstr "Jugador 1"
+
+#: ui/new-dialog.glade:77
+msgid "Player 2:"
+msgstr "Jugador 2"
+
+#: ui/new-dialog.glade:249
+msgid "Start"
+msgstr "Comenzar"
+
+#. Steps
+#: src/player.c:51 src/player.c:54
+#, c-format
+msgid "Steps: %i"
+msgstr "%i pasos"
+
 #: src/player.c:123 src/player.c:179
 msgid "Throw dice"
 msgstr "Lanzar dados"
+
+#: ui/new-dialog.glade:201
+msgid "To win:"
+msgstr "Puntos para ganar:"
+
+#: ui/main-window.glade:202
+msgid "Undo"
+msgstr "Deshacer"
+
+#: ui/main-window.glade:23
+msgid "_Backgammon"
+msgstr "_Backgammon"
+
+#: ui/main-window.glade:33
+msgid "_New Game"
+msgstr "_Nuevo Juego"
+
+#: ui/main-window.glade:48
+msgid "_Quit"
+msgstr "_Salir"
