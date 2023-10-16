@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-11 21:58-0300\n"
+"POT-Creation-Date: 2023-10-16 10:58-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,7 +23,7 @@ msgstr ""
 msgid "%i points"
 msgstr ""
 
-#: src/player.c:249
+#: src/player.c:264
 #, c-format
 msgid "%s double score. Accept?"
 msgstr ""
@@ -84,7 +84,7 @@ msgstr ""
 msgid "End the current game?"
 msgstr ""
 
-#: src/player.c:152 src/player.c:223
+#: src/player.c:152 src/player.c:238
 msgid "End turn"
 msgstr ""
 
@@ -92,7 +92,7 @@ msgstr ""
 msgid "Human"
 msgstr ""
 
-#: src/player.c:145 src/player.c:207
+#: src/player.c:145 src/player.c:222
 msgid "Move pieces"
 msgstr ""
 
@@ -114,7 +114,7 @@ msgstr ""
 msgid "Steps: %i"
 msgstr ""
 
-#: src/player.c:123 src/player.c:179
+#: src/player.c:123 src/player.c:180
 msgid "Throw dice"
 msgstr ""
 

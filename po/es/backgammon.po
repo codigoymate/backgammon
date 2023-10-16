@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-11 21:36-0300\n"
+"POT-Creation-Date: 2023-10-15 18:06-0300\n"
 "PO-Revision-Date: 2023-10-09 22:44-0300\n"
 "Last-Translator: Javier Candales <javier_candales@yahoo.com.ar>\n"
 "Language-Team: Spanish <es@tp.org.es>\n"
@@ -23,7 +23,7 @@ msgstr ""
 msgid "%i points"
 msgstr "%i puntos"
 
-#: src/player.c:249
+#: src/player.c:264
 #, c-format
 msgid "%s double score. Accept?"
 msgstr "%s dobla los puntos. ¿Aceptar?"
@@ -41,7 +41,7 @@ msgstr "%s gana la ronda con %u puntos"
 #: src/backgammon.c:307
 #, c-format
 msgid "%s' turn"
-msgstr "Turno de %s"
+msgstr "Turno de\n%s"
 
 #: src/results_dialog.c:112 src/results_dialog.c:117
 #, c-format
@@ -78,13 +78,13 @@ msgstr "Doble"
 
 #: ui/main-window.glade:188
 msgid "End Turn"
-msgstr "Turno finalizado"
+msgstr "Finalizar turno"
 
 #: src/new_dialog.c:117
 msgid "End the current game?"
 msgstr "¿Finalizar el juego?"
 
-#: src/player.c:152 src/player.c:223
+#: src/player.c:152 src/player.c:238
 msgid "End turn"
 msgstr "Turno finalizado"
 
@@ -92,7 +92,7 @@ msgstr "Turno finalizado"
 msgid "Human"
 msgstr "Humano"
 
-#: src/player.c:145 src/player.c:207
+#: src/player.c:145 src/player.c:222
 msgid "Move pieces"
 msgstr "Mover fichas"
 
@@ -114,7 +114,7 @@ msgstr "Comenzar"
 msgid "Steps: %i"
 msgstr "%i pasos"
 
-#: src/player.c:123 src/player.c:179
+#: src/player.c:123 src/player.c:180
 msgid "Throw dice"
 msgstr "Lanzar dados"
 
