@@ -182,6 +182,8 @@ gboolean ia_play_func(void *bgp, gboolean double_request) {
 	guint choice, i;
 	GList *iter;
 	gint player_steps, opponent_steps, diff;
+	Movement *movement;
+	gboolean chosen;
 	Backgammon *bg = (Backgammon *) bgp;
 
 	if (double_request) return ia_double_request(bg);
@@ -235,15 +237,37 @@ gboolean ia_play_func(void *bgp, gboolean double_request) {
 			gtk_label_set_text(bg->action_label, _("Move pieces"));
 			gtk_widget_set_sensitive(GTK_WIDGET(bg->end_turn_button), FALSE);
 
-			choice = g_random_int_range(0, g_list_length(bg->board->movements));
-			i = 0;
+			// TODO: improve ai
+
+			// Check best movement
+			chosen = FALSE;
 			for (iter = bg->board->movements; iter; iter = iter->next) {
-				if (choice == i) {
+				movement = (Movement *) iter->data;
+				if (movement->goal_dest) {
+					chosen = TRUE;
+					move_piece(bg, (Movement *) iter->data);
+					board_redraw(bg->board);
+					break;
+				} else if (bg_current_player(bg)->direction * bg->board->places[movement->dest].data > 0) {
+					chosen = TRUE;
 					move_piece(bg, (Movement *) iter->data);
 					board_redraw(bg->board);
 					break;
 				}
-				i ++;
+			}
+
+			// Randomize movement
+			if (!chosen) {
+				choice = g_random_int_range(0, g_list_length(bg->board->movements));
+				i = 0;
+				for (iter = bg->board->movements; iter; iter = iter->next) {
+					if (i == choice) {
+						move_piece(bg, (Movement *) iter->data);
+						board_redraw(bg->board);
+						break;
+					}
+					i ++;
+				}
 			}
 		}
 		bg_next_step(bg);

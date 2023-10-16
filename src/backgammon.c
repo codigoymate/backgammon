@@ -366,7 +366,7 @@ gboolean bg_all_pieces_in_territory(Backgammon *bg) {
 
 	if (cplayer->direction == -1) {
 		if (board->prison[1]) return FALSE;
-		start = 6; end = 23;
+		start = 6; end = 24;
 	} else {
 		if (board->prison[0]) return FALSE;
 		start = 0; end = 18;
