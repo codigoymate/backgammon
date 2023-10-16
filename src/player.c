@@ -19,7 +19,20 @@
 
 #define _(str)	gettext(str)
 
+/**
+ * @brief Human response to the opponent's request to double points
+ * 
+ * @param bg backgammon instance
+ * @return gboolean TRUE: Positive response
+ */
 gboolean human_double_request(Backgammon *bg);
+
+/**
+ * @brief AI response to the opponent's request to double points
+ * 
+ * @param bg backgammon instance
+ * @return gboolean TRUE: Positive response
+ */
 gboolean ia_double_request(Backgammon *bg);
 
 /**
@@ -168,6 +181,7 @@ gboolean human_play_func(void *bgp, gboolean double_request) {
 gboolean ia_play_func(void *bgp, gboolean double_request) {
 	guint choice, i;
 	GList *iter;
+	gint player_steps, opponent_steps, diff;
 	Backgammon *bg = (Backgammon *) bgp;
 
 	if (double_request) return ia_double_request(bg);
@@ -179,8 +193,22 @@ gboolean ia_play_func(void *bgp, gboolean double_request) {
 		gtk_label_set_text(bg->action_label, _("Throw dice"));
 		gtk_widget_set_sensitive(GTK_WIDGET(bg->end_turn_button), FALSE);
 
-		if (g_random_double_range(0, 1.0) < 0.1) {
-			double_perform(bg);
+		// Double perform
+		player_steps = player_count_steps(bg, bg_current_player(bg));
+		opponent_steps = player_count_steps(bg, bg_opponent(bg));
+
+		if (opponent_steps <= player_steps) {
+
+			diff = player_steps - opponent_steps;
+
+			if (diff <= 5)
+				if (g_random_double_range(0.0, 1.0) < 0.05) double_perform(bg);
+
+			if (diff > 5 && diff <= 30)
+				if (g_random_double_range(0.0, 1.0) < 0.2) double_perform(bg);
+
+			if (g_random_double_range(0.0, 1.0) < 0.3) double_perform(bg);
+
 		}
 		
 		dice_roll(bg->board->dice, bg->board->consumed_dice);
@@ -241,6 +269,12 @@ gboolean ia_delayed_func(gpointer data) {
 	return G_SOURCE_REMOVE;
 }
 
+/**
+ * @brief Human response to the opponent's request to double points
+ * 
+ * @param bg backgammon instance
+ * @return gboolean TRUE: Positive response
+ */
 gboolean human_double_request(Backgammon *bg) {
 	GString *msg;
 	gboolean result;
@@ -256,7 +290,25 @@ gboolean human_double_request(Backgammon *bg) {
 	return result;
 }
 
+/**
+ * @brief AI response to the opponent's request to double points
+ * 
+ * @param bg backgammon instance
+ * @return gboolean TRUE: Positive response
+ */
 gboolean ia_double_request(Backgammon *bg) {
-	// TODO: improve ia
-	return g_random_double_range(0.0, 1.0) > 0.5;
+	gint player_steps, opponent_steps, diff;
+	player_steps = player_count_steps(bg, bg_opponent(bg));
+	opponent_steps = player_count_steps(bg, bg_current_player(bg));
+
+	diff = player_steps - opponent_steps;
+
+	if (diff < -20) return g_random_double_range(0.0, 1.0) < 0.1;
+	
+	if (diff >= -20 && diff < 10)
+		return g_random_double_range(0.0, 1.0) < 0.4;
+		
+
+	return g_random_double_range(0.0, 1.0) < 0.9;
+
 }
